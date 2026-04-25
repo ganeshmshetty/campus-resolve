@@ -10,6 +10,35 @@ export function NewReportPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  
+  // GPS State
+  const [latitude, setLatitude] = useState<number | null>(null)
+  const [longitude, setLongitude] = useState<number | null>(null)
+  const [isDetectingGps, setIsDetectingGps] = useState(false)
+  const [gpsError, setGpsError] = useState<string | null>(null)
+
+  function handleDetectGps() {
+    setIsDetectingGps(true)
+    setGpsError(null)
+    
+    if (!navigator.geolocation) {
+      setGpsError('Geolocation is not supported by your browser')
+      setIsDetectingGps(false)
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLatitude(position.coords.latitude)
+        setLongitude(position.coords.longitude)
+        setIsDetectingGps(false)
+      },
+      () => {
+        setGpsError('Unable to retrieve your location')
+        setIsDetectingGps(false)
+      }
+    )
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -138,12 +167,18 @@ export function NewReportPage() {
               <div className="two-col">
                 <TextInput id="room" name="room" label="Room Number (Optional)" placeholder="e.g., Room 304" />
                 <div className="field" style={{ justifyContent: 'flex-end' }}>
-                  <Button type="button" variant="secondary" style={{ width: '100%' }}>
+                  <Button type="button" variant="secondary" style={{ width: '100%' }} onClick={handleDetectGps} disabled={isDetectingGps}>
                     <span className="material-symbols-outlined icon">my_location</span>
-                    Use Current GPS Location
+                    {isDetectingGps ? 'Detecting...' : (latitude && longitude ? 'Location Saved' : 'Use Current GPS Location')}
                   </Button>
+                  {gpsError && <p style={{ color: 'var(--color-error)', fontSize: '12px', marginTop: '4px' }}>{gpsError}</p>}
+                  {latitude && longitude && <p style={{ color: 'var(--status-resolved)', fontSize: '12px', marginTop: '4px' }}>Detected: {latitude.toFixed(4)}, {longitude.toFixed(4)}</p>}
                 </div>
               </div>
+              
+              {/* Hidden GPS inputs */}
+              {latitude && <input type="hidden" name="latitude" value={latitude} />}
+              {longitude && <input type="hidden" name="longitude" value={longitude} />}
             </section>
 
             <section className="form-section">

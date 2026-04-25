@@ -5,6 +5,7 @@ import { ReportsManagementPage } from '../pages/admin/ReportsManagementPage'
 import { AuthorityDashboardPage } from '../pages/authority/AuthorityDashboardPage'
 import { AuthPage } from '../pages/AuthPage'
 import { LandingPage } from '../pages/LandingPage'
+import { MapPage } from '../pages/MapPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { NewReportPage } from '../pages/reports/NewReportPage'
 import { ReportDetailsPage } from '../pages/reports/ReportDetailsPage'
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: 'auth', element: <AuthPage /> },
+      { path: 'map', element: <MapPage /> },
       { path: 'user/dashboard', element: <UserDashboardPage /> },
       { path: 'authority/dashboard', element: <AuthorityDashboardPage /> },
       { path: 'admin/dashboard', element: <AdminDashboardPage /> },
