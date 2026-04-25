@@ -18,7 +18,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   })
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: 'An error occurred while parsing the error response' }))
+    const errorText = await response.text().catch(() => 'Unable to read response body');
+    let errorData;
+    try {
+      errorData = JSON.parse(errorText);
+    } catch {
+      throw new Error(`API Error (${response.status} ${response.statusText}): ${errorText.slice(0, 100)}...`);
+    }
     const errorMessage = errorData?.error?.message || errorData?.message || response.statusText || 'Unknown Error'
     throw new Error(errorMessage)
   }
