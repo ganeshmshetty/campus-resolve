@@ -7,6 +7,10 @@ import { reportsRouter } from './reports.routes.js'
 
 const apiRouter = Router()
 
+apiRouter.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+})
+
 apiRouter.use('/auth', authRouter)
 apiRouter.get('/me', requireAuth, authController.me)
 apiRouter.use('/reports', reportsRouter)

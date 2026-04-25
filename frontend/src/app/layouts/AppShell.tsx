@@ -1,10 +1,12 @@
 import { NavLink, Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { api } from '../../utils/api'
 
 export function AppShell() {
   const navigate = useNavigate()
   const location = useLocation()
   const [user, setUser] = useState<any>(null)
+  const [backendStatus, setBackendStatus] = useState<string>('Checking backend...')
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -20,6 +22,15 @@ export function AppShell() {
       setUser(null)
     }
   }, [location.pathname])
+
+  useEffect(() => {
+    api.get<{status: string}>('/health')
+      .then(res => setBackendStatus(res.status === 'ok' ? 'Backend Connected ✅' : 'Backend Issue ⚠️'))
+      .catch(err => {
+        console.error('Health check failed:', err)
+        setBackendStatus('Backend Error ❌')
+      })
+  }, [])
 
   const handleLogout = () => {
     localStorage.removeItem('access_token')
@@ -113,7 +124,11 @@ export function AppShell() {
       
       <footer style={{ borderTop: '1px solid var(--color-outline-variant)', marginTop: 'auto', paddingBlock: 'var(--space-5)' }}>
         <div className="container split" style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-variant)' }}>
-          <div>© 2024 Campus Resolve Portal. All rights reserved.</div>
+          <div className="split" style={{ justifyContent: 'flex-start', gap: '8px' }}>
+            <span>© 2024 Campus Resolve Portal. All rights reserved.</span>
+            <span>|</span>
+            <span style={{ fontWeight: 600, color: backendStatus.includes('✅') ? 'var(--status-resolved)' : 'var(--color-error)' }}>{backendStatus}</span>
+          </div>
           <div className="button-row" style={{ gap: 'var(--space-4)' }}>
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>

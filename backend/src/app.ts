@@ -13,7 +13,7 @@ const corsOrigins = env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
 // Use type assertion to handle CJS/ESM hybrid packages that TS struggles with in NodeNext mode
 app.use((helmet as any)())
 app.use((cors as any)({ 
-  origin: corsOrigins.includes('*') ? true : corsOrigins,
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
