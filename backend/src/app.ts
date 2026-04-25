@@ -10,9 +10,10 @@ const app = express()
 
 const corsOrigins = env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
 
-app.use(helmet())
-app.use(cors({ origin: corsOrigins }))
-app.use(morgan('dev'))
+// Use type assertion to handle CJS/ESM hybrid packages that TS struggles with in NodeNext mode
+app.use((helmet as any)())
+app.use((cors as any)({ origin: corsOrigins }))
+app.use((morgan as any)('dev'))
 app.use(express.json({ limit: '2mb' }))
 
 app.get('/health', (_req, res) => {
