@@ -18,15 +18,20 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   })
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'An error occurred' }))
-    throw new Error(error.message || response.statusText)
+    const errorData = await response.json().catch(() => ({ message: 'An error occurred while parsing the error response' }))
+    const errorMessage = errorData?.error?.message || errorData?.message || response.statusText || 'Unknown Error'
+    throw new Error(errorMessage)
   }
 
   if (response.status === 204) {
     return {} as T
   }
 
-  return response.json()
+  try {
+    return await response.json()
+  } catch (err) {
+    throw new Error('Invalid JSON response from server. The API might be unreachable.')
+  }
 }
 
 export const api = {

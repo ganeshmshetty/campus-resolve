@@ -6,6 +6,7 @@ import { api } from '../utils/api'
 
 export function AuthPage() {
   const navigate = useNavigate()
+  const [isLogin, setIsLogin] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -17,8 +18,13 @@ export function AuthPage() {
     const formData = new FormData(event.currentTarget)
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+    const name = formData.get('name') as string
 
     try {
+      if (!isLogin) {
+        await api.post('/auth/register', { name, email, password })
+      }
+
       const response = await api.post<{ data: { accessToken: string; user: any } }>('/auth/login', {
         email,
         password,
@@ -33,7 +39,7 @@ export function AuthPage() {
       else if (role === 'authority') navigate('/authority/dashboard')
       else navigate('/')
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in')
+      setError(err.message || `Failed to ${isLogin ? 'sign in' : 'register'}`)
     } finally {
       setIsLoading(false)
     }
@@ -70,22 +76,28 @@ export function AuthPage() {
       <main className="auth-split__main">
         <div className="auth-card">
           <div>
-            <h2 style={{ fontSize: '1.75rem', marginBottom: 'var(--space-1)' }}>Sign in</h2>
+            <h2 style={{ fontSize: '1.75rem', marginBottom: 'var(--space-1)' }}>
+              {isLogin ? 'Sign in' : 'Create an account'}
+            </h2>
             <p style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>
-              Access your dashboard and manage reports.
+              {isLogin ? 'Access your dashboard and manage reports.' : 'Join the CampusResolve community today.'}
             </p>
           </div>
 
-          <Button variant="secondary" style={{ width: '100%', justifyContent: 'center' }}>
-            <span className="material-symbols-outlined icon">school</span>
-            Sign in with Campus Email
-          </Button>
+          {isLogin && (
+            <>
+              <Button variant="secondary" style={{ width: '100%', justifyContent: 'center' }}>
+                <span className="material-symbols-outlined icon">school</span>
+                Sign in with Campus Email
+              </Button>
 
-          <div className="divider">
-            <div className="divider__line"></div>
-            <span className="divider__text">or continue with email</span>
-            <div className="divider__line"></div>
-          </div>
+              <div className="divider">
+                <div className="divider__line"></div>
+                <span className="divider__text">or continue with email</span>
+                <div className="divider__line"></div>
+              </div>
+            </>
+          )}
 
           <form className="form-stack" onSubmit={handleSubmit}>
             {error && (
@@ -93,6 +105,19 @@ export function AuthPage() {
                 {error}
               </div>
             )}
+
+            {!isLogin && (
+              <TextInput
+                id="name"
+                type="text"
+                name="name"
+                label="Full Name"
+                placeholder="John Doe"
+                autoComplete="name"
+                required
+              />
+            )}
+
             <TextInput
               id="email"
               type="email"
@@ -105,7 +130,9 @@ export function AuthPage() {
             <div className="stack-sm">
               <div className="split">
                 <label className="field__label" htmlFor="password">Password</label>
-                <Link to="#" className="inline-link" style={{ fontSize: '14px' }}>Forgot password?</Link>
+                {isLogin && (
+                  <Link to="#" className="inline-link" style={{ fontSize: '14px' }}>Forgot password?</Link>
+                )}
               </div>
               <input
                 className="field__input"
@@ -113,20 +140,31 @@ export function AuthPage() {
                 type="password"
                 name="password"
                 placeholder="••••••••"
-                autoComplete="current-password"
+                autoComplete={isLogin ? 'current-password' : 'new-password'}
                 required
+                minLength={8}
               />
             </div>
             
             <Button type="submit" disabled={isLoading} style={{ width: '100%', justifyContent: 'center', marginTop: 'var(--space-2)' }}>
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? (isLogin ? 'Signing in...' : 'Creating account...') : (isLogin ? 'Sign In' : 'Sign Up')}
             </Button>
           </form>
 
           <div style={{ textAlign: 'center', marginTop: 'var(--space-2)' }}>
             <p style={{ fontSize: '0.875rem', color: 'var(--color-on-surface-variant)' }}>
-              Don't have an account? 
-              <Link to="#" className="inline-link" style={{ marginLeft: '8px' }}>Register here</Link>
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}
+              <button 
+                type="button" 
+                onClick={() => {
+                  setIsLogin(!isLogin)
+                  setError(null)
+                }} 
+                className="inline-link" 
+                style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
+              >
+                {isLogin ? 'Register here' : 'Sign in'}
+              </button>
             </p>
           </div>
         </div>

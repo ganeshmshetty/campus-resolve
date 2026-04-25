@@ -1,16 +1,25 @@
-import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 export function AppShell() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    if (storedUser && storedUser !== 'undefined') {
+      try {
+        setUser(JSON.parse(storedUser))
+      } catch (err) {
+        console.error('Failed to parse user from local storage', err)
+        localStorage.removeItem('user')
+        setUser(null)
+      }
+    } else {
+      setUser(null)
     }
-  }, [])
+  }, [location.pathname])
 
   const handleLogout = () => {
     localStorage.removeItem('access_token')
