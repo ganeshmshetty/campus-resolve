@@ -51,8 +51,8 @@ export function LandingPage() {
           <span className="material-symbols-outlined bento-card__icon-bg">assignment_turned_in</span>
           <div className="bento-card__label">Total Impact</div>
           <div>
-            <div className="bento-card__value">14,205</div>
-            <div className="bento-card__description">Issues resolved across campus this year.</div>
+            <div className="bento-card__value">Live</div>
+            <div className="bento-card__description">Metrics appear here after backend analytics integration.</div>
           </div>
         </div>
         
@@ -62,8 +62,8 @@ export function LandingPage() {
             Average Resolution
           </div>
           <div>
-            <div className="bento-card__value">1.8 <span style={{ fontSize: '20px', fontWeight: 600, opacity: 0.7 }}>Days</span></div>
-            <div className="bento-card__description">From initial report to verified completion.</div>
+            <div className="bento-card__value">--</div>
+            <div className="bento-card__description">Will be calculated from real resolution timestamps.</div>
           </div>
         </div>
 
@@ -73,8 +73,8 @@ export function LandingPage() {
             Community
           </div>
           <div>
-            <div className="bento-card__value">8,400+</div>
-            <div className="bento-card__description">Active student and faculty users registered.</div>
+            <div className="bento-card__value">--</div>
+            <div className="bento-card__description">Active users will be shown once identity data is connected.</div>
           </div>
         </div>
       </section>

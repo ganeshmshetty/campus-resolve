@@ -15,19 +15,19 @@ export function AuthorityDashboardPage() {
 
       <StatsGrid
         items={[
-          { label: 'Assigned', value: '18', icon: 'assignment_ind', accent: 'var(--color-primary)' },
-          { label: 'Due today', value: '4', icon: 'calendar_today', accent: 'var(--color-error)' },
-          { label: 'Average closure', value: '2.8 days', icon: 'timer', accent: 'var(--status-resolved)' },
+          { label: 'Assigned', value: '--', icon: 'assignment_ind', accent: 'var(--color-primary)' },
+          { label: 'Due today', value: '--', icon: 'calendar_today', accent: 'var(--color-error)' },
+          { label: 'Average closure', value: '--', icon: 'timer', accent: 'var(--status-resolved)' },
         ]}
       />
 
       <Card>
         <div className="between-row">
           <div>
-            <h2>Drainage blockage near Library Lane</h2>
-            <p>Category: drainage. Reported by student desk.</p>
+            <h2>No active assignment loaded</h2>
+            <p>Assigned report details will appear here when authority queue data is available.</p>
           </div>
-          <StatusChip status="ACKNOWLEDGED" />
+          <StatusChip status="OPEN" />
         </div>
         <div className="button-row">
           <Button>Mark In Progress</Button>

@@ -1,5 +1,3 @@
-import { Card } from '../ui/Card'
-
 type StatItem = {
   label: string
   value: string

@@ -1,6 +1,5 @@
 import { Card } from '../../components/ui/Card'
 import { PageHeader } from '../../components/shared/PageHeader'
-import { StatusChip } from '../../components/ui/StatusChip'
 import { Button } from '../../components/ui/Button'
 
 export function ReportsManagementPage() {
@@ -26,31 +25,15 @@ export function ReportsManagementPage() {
             </thead>
             <tbody>
               <tr>
-                <td>rep_001</td>
-                <td>roads</td>
-                <td>
-                  <StatusChip status="OPEN" />
-                </td>
-                <td>Unassigned</td>
-                <td>
-                  <Button size="sm">Assign</Button>
-                </td>
-              </tr>
-              <tr>
-                <td>rep_002</td>
-                <td>water</td>
-                <td>
-                  <StatusChip status="IN_PROGRESS" />
-                </td>
-                <td>Facilities North</td>
-                <td>
-                  <Button size="sm" variant="secondary">
-                    Reassign
-                  </Button>
+                <td colSpan={5} style={{ textAlign: 'center', paddingBlock: '24px' }}>
+                  No report records loaded yet.
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div className="button-row">
+          <Button size="sm">Refresh</Button>
         </div>
       </Card>
     </div>

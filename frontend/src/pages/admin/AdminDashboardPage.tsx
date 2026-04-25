@@ -15,22 +15,22 @@ export function AdminDashboardPage() {
 
       <StatsGrid
         items={[
-          { label: 'All reports', value: '148', icon: 'assignment' },
-          { label: 'Unassigned', value: '11', icon: 'person_off', accent: 'var(--color-error)' },
-          { label: 'Resolved this week', value: '24', icon: 'check_circle', accent: 'var(--status-resolved)' },
-          { label: 'Reopened', value: '3', icon: 'refresh', accent: 'var(--status-in-progress)' },
+          { label: 'All reports', value: '--', icon: 'assignment' },
+          { label: 'Unassigned', value: '--', icon: 'person_off', accent: 'var(--color-error)' },
+          { label: 'Resolved this week', value: '--', icon: 'check_circle', accent: 'var(--status-resolved)' },
+          { label: 'Reopened', value: '--', icon: 'refresh', accent: 'var(--status-in-progress)' },
         ]}
       />
 
       <section className="cards-grid cards-grid--two">
         <Card>
           <h2>Assignment backlog</h2>
-          <p>11 reports are waiting for owner assignment.</p>
+          <p>Backlog details will appear here after connecting admin analytics.</p>
           <Button size="sm">Open assignment queue</Button>
         </Card>
         <Card>
           <h2>Category performance</h2>
-          <p>Streetlights and sanitation are currently above target closure time.</p>
+          <p>Category SLA insights will appear here after live report data sync.</p>
           <Button size="sm" variant="secondary">
             View analytics
           </Button>

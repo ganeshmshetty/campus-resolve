@@ -18,12 +18,6 @@ Default URL: http://localhost:4000
 - Mock mode (default): Runs without Supabase credentials using in-memory users and reports.
 - Supabase mode: Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env. Add SUPABASE_ANON_KEY to enable password login endpoint.
 
-## Mock Users
-
-- Admin: admin@campus.edu / Password123!
-- Authority: authority@campus.edu / Password123!
-- User: user@campus.edu / Password123!
-
 ## API Surface
 
 - POST /api/auth/register
