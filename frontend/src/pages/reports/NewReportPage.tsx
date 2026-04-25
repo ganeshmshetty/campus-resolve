@@ -3,12 +3,13 @@ import { useNavigate, Link } from 'react-router-dom'
 import { REPORT_CATEGORIES } from '../../types/domain'
 import { Button } from '../../components/ui/Button'
 import { TextInput } from '../../components/ui/TextInput'
-import { api } from '../../utils/api'
+import { api, BASE_URL, ApiError } from '../../utils/api'
 
 export function NewReportPage() {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   
   // GPS State
@@ -44,6 +45,7 @@ export function NewReportPage() {
     event.preventDefault()
     setIsLoading(true)
     setError(null)
+    setFieldErrors({})
 
     const formData = new FormData(event.currentTarget)
     const payload = {
@@ -66,7 +68,7 @@ export function NewReportPage() {
           imageFormData.append('image', file)
           imageFormData.append('imageType', 'issue')
           
-          await fetch(`/api/reports/${reportId}/images`, {
+          await fetch(`${BASE_URL}/reports/${reportId}/images`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -78,7 +80,12 @@ export function NewReportPage() {
 
       navigate('/user/dashboard')
     } catch (err: any) {
-      setError(err.message || 'Failed to submit report')
+      if (err instanceof ApiError && err.status === 422 && err.details?.fieldErrors) {
+        setFieldErrors(err.details.fieldErrors)
+        setError('Validation failed. Please check the highlighted fields.')
+      } else {
+        setError(err.message || 'Failed to submit report')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -107,24 +114,28 @@ export function NewReportPage() {
             )}
             <section className="form-section">
               <h2 className="form-section__title">1. Essential Details</h2>
-              <TextInput 
-                id="title" 
-                name="title" 
-                label="Issue Title" 
-                placeholder="e.g., Leaking pipe in Science Building bathroom" 
-                required
-              />
+              <div className="stack-sm">
+                <TextInput 
+                  id="title" 
+                  name="title" 
+                  label="Issue Title" 
+                  placeholder="e.g., Leaking pipe in Science Building bathroom" 
+                  required
+                />
+                {fieldErrors.title && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.title.join(', ')}</p>}
+              </div>
               <div className="two-col">
-                <div className="field">
+                <div className="field stack-sm">
                   <label className="field__label" htmlFor="category">Category</label>
-                  <select className="field__input" id="category" name="category" required>
-                    <option value="">Select a category</option>
+                  <select className="field__input" id="category" name="category" defaultValue={REPORT_CATEGORIES[0]} required>
+                    <option disabled value="">Select a category</option>
                     {REPORT_CATEGORIES.map((category) => (
                       <option key={category} value={category}>
                         {category}
                       </option>
                     ))}
                   </select>
+                  {fieldErrors.category && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.category.join(', ')}</p>}
                 </div>
                 <div className="field">
                   <label className="field__label" htmlFor="urgency">Urgency Level</label>
@@ -135,7 +146,7 @@ export function NewReportPage() {
                   </select>
                 </div>
               </div>
-              <div className="field">
+              <div className="field stack-sm">
                 <label className="field__label" htmlFor="description">Description</label>
                 <textarea
                   className="field__textarea"
@@ -145,12 +156,13 @@ export function NewReportPage() {
                   rows={4}
                   required
                 />
+                {fieldErrors.description && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.description.join(', ')}</p>}
               </div>
             </section>
 
             <section className="form-section">
               <h2 className="form-section__title">2. Location</h2>
-              <div className="field">
+              <div className="field stack-sm">
                 <label className="field__label" htmlFor="address">Building / Area</label>
                 <div style={{ position: 'relative' }}>
                   <span className="material-symbols-outlined icon" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>location_city</span>
@@ -163,6 +175,7 @@ export function NewReportPage() {
                     required 
                   />
                 </div>
+                {fieldErrors.address && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.address.join(', ')}</p>}
               </div>
               <div className="two-col">
                 <TextInput id="room" name="room" label="Room Number (Optional)" placeholder="e.g., Room 304" />

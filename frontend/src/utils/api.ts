@@ -1,8 +1,19 @@
-const VITE_API_URL = import.meta.env.VITE_API_URL || ''
+const VITE_API_URL = (import.meta.env.VITE_API_URL || '').trim()
 // Ensure BASE_URL ends with /api if it's an absolute URL, or defaults to /api for relative calls
-const BASE_URL = VITE_API_URL 
+export const BASE_URL = VITE_API_URL 
   ? (VITE_API_URL.endsWith('/api') ? VITE_API_URL : `${VITE_API_URL.replace(/\/$/, '')}/api`)
   : '/api'
+
+export class ApiError extends Error {
+  constructor(
+    public message: string,
+    public status: number,
+    public details?: any
+  ) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const cleanPath = path.startsWith('/') ? path : `/${path}`
@@ -28,10 +39,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     try {
       errorData = JSON.parse(errorText);
     } catch {
-      throw new Error(`API Error (${response.status} ${response.statusText}): ${errorText.slice(0, 100)}...`);
+      throw new ApiError(`API Error (${response.status} ${response.statusText}): ${errorText.slice(0, 100)}...`, response.status);
     }
+    
     const errorMessage = errorData?.error?.message || errorData?.message || response.statusText || 'Unknown Error'
-    throw new Error(errorMessage)
+    throw new ApiError(errorMessage, response.status, errorData?.error?.details || errorData?.details)
   }
 
   if (response.status === 204) {

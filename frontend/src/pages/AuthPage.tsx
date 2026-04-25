@@ -2,17 +2,19 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { TextInput } from '../components/ui/TextInput'
 import { Button } from '../components/ui/Button'
-import { api } from '../utils/api'
+import { api, ApiError } from '../utils/api'
 
 export function AuthPage() {
   const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
+    setFieldErrors({})
     setIsLoading(true)
 
     const formData = new FormData(event.currentTarget)
@@ -39,7 +41,12 @@ export function AuthPage() {
       else if (role === 'authority') navigate('/authority/dashboard')
       else navigate('/')
     } catch (err: any) {
-      setError(err.message || `Failed to ${isLogin ? 'sign in' : 'register'}`)
+      if (err instanceof ApiError && err.status === 422 && err.details?.fieldErrors) {
+        setFieldErrors(err.details.fieldErrors)
+        setError('Validation failed. Please check the highlighted fields.')
+      } else {
+        setError(err.message || `Failed to ${isLogin ? 'sign in' : 'register'}`)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -107,26 +114,32 @@ export function AuthPage() {
             )}
 
             {!isLogin && (
-              <TextInput
-                id="name"
-                type="text"
-                name="name"
-                label="Full Name"
-                placeholder="John Doe"
-                autoComplete="name"
-                required
-              />
+              <div className="stack-sm">
+                <TextInput
+                  id="name"
+                  type="text"
+                  name="name"
+                  label="Full Name"
+                  placeholder="John Doe"
+                  autoComplete="name"
+                  required
+                />
+                {fieldErrors.name && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.name.join(', ')}</p>}
+              </div>
             )}
 
-            <TextInput
-              id="email"
-              type="email"
-              name="email"
-              label="Email Address"
-              placeholder="name@campus.edu"
-              autoComplete="email"
-              required
-            />
+            <div className="stack-sm">
+              <TextInput
+                id="email"
+                type="email"
+                name="email"
+                label="Email Address"
+                placeholder="name@campus.edu"
+                autoComplete="email"
+                required
+              />
+              {fieldErrors.email && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.email.join(', ')}</p>}
+            </div>
             <div className="stack-sm">
               <div className="split">
                 <label className="field__label" htmlFor="password">Password</label>
@@ -144,6 +157,7 @@ export function AuthPage() {
                 required
                 minLength={8}
               />
+              {fieldErrors.password && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.password.join(', ')}</p>}
             </div>
             
             <Button type="submit" disabled={isLoading} style={{ width: '100%', justifyContent: 'center', marginTop: 'var(--space-2)' }}>
@@ -159,6 +173,7 @@ export function AuthPage() {
                 onClick={() => {
                   setIsLogin(!isLogin)
                   setError(null)
+                  setFieldErrors({})
                 }} 
                 className="inline-link" 
                 style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
