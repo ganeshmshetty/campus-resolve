@@ -30,4 +30,5 @@ app.use('/api', apiRouter)
 app.use(notFoundHandler)
 app.use(errorHandler)
 
+export default app
 export { app }

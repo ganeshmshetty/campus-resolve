@@ -1,6 +1,7 @@
 {
   "name": "campus-resolve-monorepo",
   "private": true,
+  "type": "module",
   "workspaces": [
     "frontend",
     "backend"
