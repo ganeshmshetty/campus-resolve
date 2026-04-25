@@ -1,7 +1,12 @@
-const BASE_URL = import.meta.env.VITE_API_URL || '/api'
+const VITE_API_URL = import.meta.env.VITE_API_URL || ''
+// Ensure BASE_URL ends with /api if it's an absolute URL, or defaults to /api for relative calls
+const BASE_URL = VITE_API_URL 
+  ? (VITE_API_URL.endsWith('/api') ? VITE_API_URL : `${VITE_API_URL.replace(/\/$/, '')}/api`)
+  : '/api'
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const url = `${BASE_URL}${path}`
+  const cleanPath = path.startsWith('/') ? path : `/${path}`
+  const url = `${BASE_URL}${cleanPath}`
   const token = localStorage.getItem('access_token')
   
   const headers = new Headers(options.headers)
