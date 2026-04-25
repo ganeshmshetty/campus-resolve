@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CampusResolve - Dashboard</title>
+<!-- Google Fonts: Public Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for horizontal scroll area but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb59a",
+                        "primary-fixed-dim": "#b5c4ff",
+                        "on-tertiary-container": "#ffd4c5",
+                        "surface-variant": "#e2e1ed",
+                        "on-background": "#191b23",
+                        "primary": "#003fb1",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#434654",
+                        "tertiary-fixed": "#ffdbcf",
+                        "surface-container-low": "#f3f3fe",
+                        "on-surface": "#191b23",
+                        "background": "#faf8ff",
+                        "on-primary-fixed-variant": "#003dab",
+                        "surface-dim": "#d9d9e4",
+                        "secondary-fixed": "#d9e3f4",
+                        "on-secondary-fixed-variant": "#3e4755",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-tertiary-fixed-variant": "#802a00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1a56db",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#121c28",
+                        "surface-container-highest": "#e2e1ed",
+                        "surface": "#faf8ff",
+                        "inverse-on-surface": "#f0f0fb",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e7e7f3",
+                        "secondary-container": "#d6e0f1",
+                        "on-primary-fixed": "#00174d",
+                        "outline": "#737686",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-container": "#596372",
+                        "surface-container": "#ededf8",
+                        "tertiary-container": "#ad3b00",
+                        "surface-tint": "#1353d8",
+                        "surface-bright": "#faf8ff",
+                        "inverse-primary": "#b5c4ff",
+                        "outline-variant": "#c3c5d7",
+                        "on-primary-container": "#d4dcff",
+                        "inverse-surface": "#2e3039",
+                        "error": "#ba1a1a",
+                        "secondary": "#555f6d",
+                        "tertiary": "#852b00",
+                        "secondary-fixed-dim": "#bdc7d8",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "xs": "4px",
+                        "margin-desktop": "64px",
+                        "max-width": "1200px",
+                        "xl": "40px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "margin-mobile": "16px",
+                        "md": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Public Sans"],
+                        "caption": ["Public Sans"],
+                        "label-bold": ["Public Sans"],
+                        "h3": ["Public Sans"],
+                        "body-md": ["Public Sans"],
+                        "h1": ["Public Sans"],
+                        "h2": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "label-caps": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "h3": ["24px", { "lineHeight": "1.35", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h1": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h2": ["30px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen relative flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-white dark:bg-gray-900 fixed top-0 left-0 w-full z-50 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 h-16 w-full max-w-full">
+<button class="text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 active:opacity-80 transition-all duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-['Public_Sans'] antialiased text-gray-900 dark:text-gray-100 text-xl font-bold tracking-tight text-blue-600 dark:text-blue-400">CampusResolve</h1>
+<button class="text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 active:opacity-80 transition-all duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-[80px] pb-[100px] px-margin-mobile flex flex-col gap-xl">
+<!-- Header / Greeting -->
+<section class="mt-sm">
+<h2 class="font-h2 text-h2 text-on-surface">My Dashboard</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Track and manage your campus reports.</p>
+</section>
+<!-- Summary Stats (Horizontal Scroll) -->
+<section>
+<div class="flex gap-md overflow-x-auto snap-x hide-scrollbar pb-sm -mx-margin-mobile px-margin-mobile">
+<!-- Stat Card: Open -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md min-w-[140px] flex-shrink-0 snap-start flex flex-col justify-between shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-tertiary-container uppercase tracking-wider">Open</span>
+<span class="material-symbols-outlined text-tertiary-container opacity-50 text-[20px]">assignment</span>
+</div>
+<div class="font-h1 text-h1 text-on-surface mt-sm">2</div>
+</div>
+<!-- Stat Card: In Progress -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md min-w-[140px] flex-shrink-0 snap-start flex flex-col justify-between shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-primary uppercase tracking-wider">In Progress</span>
+<span class="material-symbols-outlined text-primary opacity-50 text-[20px]">autorenew</span>
+</div>
+<div class="font-h1 text-h1 text-on-surface mt-sm">1</div>
+</div>
+<!-- Stat Card: Resolved -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md min-w-[140px] flex-shrink-0 snap-start flex flex-col justify-between shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Resolved</span>
+<span class="material-symbols-outlined text-secondary opacity-50 text-[20px]">check_circle</span>
+</div>
+<div class="font-h1 text-h1 text-on-surface mt-sm">8</div>
+</div>
+</div>
+</section>
+<!-- Recent Reports List -->
+<section class="flex flex-col gap-md">
+<h3 class="font-label-bold text-label-bold text-on-surface uppercase tracking-wide border-b border-outline-variant pb-xs mb-xs">Active Reports</h3>
+<!-- Report Card: In Progress -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md relative overflow-hidden">
+<!-- Decorative Top Edge indicating status color -->
+<div class="absolute top-0 left-0 w-full h-[4px] bg-primary"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-h3 text-h3 text-on-surface">HVAC Malfunction</span>
+<span class="font-caption text-caption text-on-surface-variant mt-xs">Library, 2nd Floor North • Oct 24</span>
+</div>
+<!-- Status Chip -->
+<div class="bg-primary-fixed text-on-primary-fixed-variant font-label-caps text-label-caps px-sm py-[4px] rounded-DEFAULT">
+                        IN PROGRESS
+                    </div>
+</div>
+<!-- Progress Timeline -->
+<div class="flex flex-col gap-sm mt-sm">
+<div class="flex items-center w-full">
+<div class="w-[8px] h-[8px] rounded-full bg-primary z-10"></div>
+<div class="flex-1 h-[2px] bg-primary -mx-1"></div>
+<div class="w-[8px] h-[8px] rounded-full bg-primary z-10 ring-4 ring-primary-fixed"></div>
+<div class="flex-1 h-[2px] bg-surface-variant -mx-1"></div>
+<div class="w-[8px] h-[8px] rounded-full bg-surface-variant z-10"></div>
+</div>
+<div class="flex justify-between font-caption text-caption text-on-surface-variant px-1">
+<span>Reported</span>
+<span class="text-primary font-medium">Assigned</span>
+<span>Resolved</span>
+</div>
+</div>
+</div>
+<!-- Report Card: Open -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md relative overflow-hidden">
+<!-- Decorative Top Edge indicating status color -->
+<div class="absolute top-0 left-0 w-full h-[4px] bg-tertiary"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-h3 text-h3 text-on-surface">Broken Pathway Light</span>
+<span class="font-caption text-caption text-on-surface-variant mt-xs">Quad walkway near Dorm C • Oct 26</span>
+</div>
+<!-- Status Chip -->
+<div class="bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-caps text-label-caps px-sm py-[4px] rounded-DEFAULT">
+                        OPEN
+                    </div>
+</div>
+<!-- Progress Timeline -->
+<div class="flex flex-col gap-sm mt-sm">
+<div class="flex items-center w-full">
+<div class="w-[8px] h-[8px] rounded-full bg-tertiary z-10 ring-4 ring-tertiary-fixed"></div>
+<div class="flex-1 h-[2px] bg-surface-variant -mx-1"></div>
+<div class="w-[8px] h-[8px] rounded-full bg-surface-variant z-10"></div>
+<div class="flex-1 h-[2px] bg-surface-variant -mx-1"></div>
+<div class="w-[8px] h-[8px] rounded-full bg-surface-variant z-10"></div>
+</div>
+<div class="flex justify-between font-caption text-caption text-on-surface-variant px-1">
+<span class="text-tertiary font-medium">Reported</span>
+<span>Assigned</span>
+<span>Resolved</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (New Report) -->
+<button class="fixed bottom-[104px] right-margin-mobile bg-primary text-on-primary w-[56px] h-[56px] rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.15)] z-40 hover:bg-primary-container hover:text-on-primary-container active:scale-95 transition-all duration-200 border border-transparent focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined text-[28px] icon-fill">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="bg-white dark:bg-gray-900 fixed bottom-0 left-0 w-full z-50 rounded-t-lg border-t border-gray-200 dark:border-gray-800 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] flex justify-around items-center h-20 w-full px-2 pb-safe">
+<!-- Home (Inactive) -->
+<button class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 px-3 py-1 hover:text-blue-500 dark:hover:text-blue-300 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Home</span>
+</button>
+<!-- Report (Inactive) -->
+<button class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 px-3 py-1 hover:text-blue-500 dark:hover:text-blue-300 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">add_circle</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Report</span>
+</button>
+<!-- Dashboard (Active) -->
+<button class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20 rounded-xl px-3 py-1 hover:text-blue-500 dark:hover:text-blue-300 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1 icon-fill">dashboard</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Dashboard</span>
+</button>
+<!-- Profile (Inactive) -->
+<button class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 px-3 py-1 hover:text-blue-500 dark:hover:text-blue-300 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Profile</span>
+</button>
+</nav>
+</body></html>

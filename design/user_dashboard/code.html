@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Campus Civic Portal - Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for clean horizontal scrolling */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#e7e7f3",
+                      "surface-bright": "#faf8ff",
+                      "surface": "#faf8ff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#003fb1",
+                      "on-primary-fixed-variant": "#003dab",
+                      "on-secondary-container": "#596372",
+                      "outline": "#737686",
+                      "on-surface-variant": "#434654",
+                      "surface-dim": "#d9d9e4",
+                      "inverse-surface": "#2e3039",
+                      "tertiary": "#852b00",
+                      "on-secondary-fixed": "#121c28",
+                      "on-error-container": "#93000a",
+                      "surface-container": "#ededf8",
+                      "primary-container": "#1a56db",
+                      "on-tertiary-fixed-variant": "#802a00",
+                      "primary-fixed": "#dbe1ff",
+                      "on-secondary": "#ffffff",
+                      "on-surface": "#191b23",
+                      "secondary-fixed-dim": "#bdc7d8",
+                      "surface-container-highest": "#e2e1ed",
+                      "on-primary-container": "#d4dcff",
+                      "on-tertiary-fixed": "#380d00",
+                      "inverse-on-surface": "#f0f0fb",
+                      "secondary-fixed": "#d9e3f4",
+                      "tertiary-fixed-dim": "#ffb59a",
+                      "secondary-container": "#d6e0f1",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#c3c5d7",
+                      "on-secondary-fixed-variant": "#3e4755",
+                      "on-error": "#ffffff",
+                      "background": "#faf8ff",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#e2e1ed",
+                      "tertiary-fixed": "#ffdbcf",
+                      "tertiary-container": "#ad3b00",
+                      "on-background": "#191b23",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#b5c4ff",
+                      "on-tertiary-container": "#ffd4c5",
+                      "secondary": "#555f6d",
+                      "surface-tint": "#1353d8",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#f3f3fe",
+                      "inverse-primary": "#b5c4ff",
+                      "on-primary-fixed": "#00174d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "unit": "4px",
+                      "margin-desktop": "64px",
+                      "xs": "4px",
+                      "gutter": "24px",
+                      "max-width": "1200px",
+                      "lg": "24px",
+                      "xl": "40px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "caption": [
+                              "Public Sans"
+                      ],
+                      "h2": [
+                              "Public Sans"
+                      ],
+                      "body-md": [
+                              "Public Sans"
+                      ],
+                      "h1": [
+                              "Public Sans"
+                      ],
+                      "body-lg": [
+                              "Public Sans"
+                      ],
+                      "label-bold": [
+                              "Public Sans"
+                      ],
+                      "body-sm": [
+                              "Public Sans"
+                      ],
+                      "label-caps": [
+                              "Public Sans"
+                      ],
+                      "h3": [
+                              "Public Sans"
+                      ]
+              },
+              "fontSize": {
+                      "caption": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h2": [
+                              "30px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h1": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "h3": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.35",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center w-full px-6 h-16 w-full mx-auto font-public-sans antialiased sticky top-0 z-50">
+<!-- Brand Logo -->
+<div class="text-xl font-bold text-blue-700 dark:text-blue-500">
+            CampusResolve
+        </div>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex items-center h-full gap-8">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 font-semibold flex items-center h-full cursor-pointer duration-200" href="#">
+                Dashboard
+            </a>
+<a class="text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center h-full px-2 cursor-pointer duration-200" href="#">
+                Reports
+            </a>
+<a class="text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center h-full px-2 cursor-pointer duration-200" href="#">
+                Map
+            </a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 text-gray-600 dark:text-gray-400 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="p-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 text-gray-600 dark:text-gray-400 flex items-center justify-center relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 text-gray-600 dark:text-gray-400 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-max-width mx-auto px-6 py-10 flex flex-col gap-xl">
+<!-- Header Section -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface mb-2">My Overview</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Track your submitted reports and their current resolution status.</p>
+</div>
+<button class="bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-colors rounded-lg px-6 py-3 font-label-bold text-label-bold flex items-center justify-center gap-2 shadow-sm whitespace-nowrap w-full md:w-auto">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                New Report
+            </button>
+</section>
+<!-- Bento Grid: Status Summary -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<!-- Total Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-2 shadow-sm">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-[20px]">assignment</span>
+<span class="font-label-bold text-label-bold">Total Reports</span>
+</div>
+<div class="font-h1 text-h1 text-on-surface">12</div>
+</div>
+<!-- Open Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-2 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-[20px] text-error">error</span>
+<span class="font-label-bold text-label-bold">Open</span>
+</div>
+<div class="font-h1 text-h1 text-on-surface">3</div>
+</div>
+<!-- In Progress Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-2 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-[20px] text-tertiary">engineering</span>
+<span class="font-label-bold text-label-bold">In Progress</span>
+</div>
+<div class="font-h1 text-h1 text-on-surface">2</div>
+</div>
+<!-- Resolved Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-2 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">check_circle</span>
+<span class="font-label-bold text-label-bold">Resolved</span>
+</div>
+<div class="font-h1 text-h1 text-on-surface">7</div>
+</div>
+</section>
+<!-- History Section -->
+<section class="flex flex-col gap-6">
+<!-- Controls Bar -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<h2 class="font-h3 text-h3 text-on-surface">My Reports</h2>
+<div class="flex w-full md:w-auto items-center gap-sm">
+<!-- Search Input -->
+<div class="relative w-full md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search history..." type="text"/>
+</div>
+<!-- Filter Button -->
+<button class="bg-surface-container-lowest border border-outline text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg px-4 py-2 font-label-bold text-label-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="hidden sm:inline">Filter</span>
+</button>
+</div>
+</div>
+<!-- Report Cards List -->
+<div class="flex flex-col gap-md">
+<!-- Card 1: In Progress -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow duration-200">
+<!-- Content Stack -->
+<div class="flex-1 flex flex-col gap-4">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-h3 text-h3 text-on-surface mb-1">Broken Streetlight near Library</h3>
+<div class="flex items-center gap-4 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">location_on</span> Main Quad, North Path</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">calendar_today</span> Oct 24, 2023</span>
+</div>
+</div>
+<!-- Status Chip (WCAG AA compliant contrast within chip) -->
+<span class="bg-tertiary-container text-on-tertiary-container font-label-caps text-label-caps px-3 py-1 rounded-full whitespace-nowrap border border-tertiary/20">
+                                IN PROGRESS
+                            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                            The streetlight on the north path leading to the library is completely out. It creates a dark blind spot at night which feels unsafe.
+                        </p>
+</div>
+<!-- Progress Timeline Vertical Divider (Desktop) / Horizontal (Mobile) -->
+<div class="w-full md:w-px md:h-auto bg-outline-variant/30 block"></div>
+<!-- Timeline Component -->
+<div class="w-full md:w-64 flex flex-col justify-center gap-4 shrink-0">
+<div class="font-label-bold text-label-bold text-on-surface-variant mb-2">Resolution Progress</div>
+<!-- Timeline Track -->
+<div class="relative flex justify-between items-center w-full px-2">
+<!-- Connecting Line -->
+<div class="absolute top-1/2 left-4 right-4 h-[2px] -translate-y-1/2 bg-surface-variant z-0"></div>
+<div class="absolute top-1/2 left-4 w-1/2 h-[2px] -translate-y-1/2 bg-tertiary z-0 transition-all"></div>
+<!-- Step 1: Open (Completed) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-tertiary border-2 border-surface-container-lowest shadow-sm flex items-center justify-center"></div>
+</div>
+<!-- Step 2: In Progress (Active) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-tertiary border-4 border-tertiary-container flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-surface-container-lowest"></div>
+</div>
+</div>
+<!-- Step 3: Resolved (Pending) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-surface-variant border-2 border-surface-container-lowest shadow-sm"></div>
+</div>
+</div>
+<!-- Timeline Labels -->
+<div class="flex justify-between w-full font-caption text-caption text-on-surface-variant mt-1">
+<span>Opened</span>
+<span class="font-semibold text-tertiary">Reviewing</span>
+<span>Done</span>
+</div>
+</div>
+</article>
+<!-- Card 2: Open -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow duration-200">
+<div class="flex-1 flex flex-col gap-4">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-h3 text-h3 text-on-surface mb-1">Water Leak in Science Hall</h3>
+<div class="flex items-center gap-4 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">location_on</span> Science Bldg, 2nd Floor Men's Restroom</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">calendar_today</span> Oct 26, 2023</span>
+</div>
+</div>
+<span class="bg-error-container text-on-error-container font-label-caps text-label-caps px-3 py-1 rounded-full whitespace-nowrap border border-error/20">
+                                OPEN
+                            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                            The second sink from the left is leaking steadily from the pipe underneath. Floor is getting slippery.
+                        </p>
+</div>
+<div class="w-full md:w-px md:h-auto bg-outline-variant/30 block"></div>
+<div class="w-full md:w-64 flex flex-col justify-center gap-4 shrink-0">
+<div class="font-label-bold text-label-bold text-on-surface-variant mb-2">Resolution Progress</div>
+<div class="relative flex justify-between items-center w-full px-2">
+<div class="absolute top-1/2 left-4 right-4 h-[2px] -translate-y-1/2 bg-surface-variant z-0"></div>
+<!-- Step 1: Open (Active) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-error border-4 border-error-container flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-surface-container-lowest"></div>
+</div>
+</div>
+<!-- Step 2: In Progress (Pending) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-surface-variant border-2 border-surface-container-lowest shadow-sm"></div>
+</div>
+<!-- Step 3: Resolved (Pending) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-surface-variant border-2 border-surface-container-lowest shadow-sm"></div>
+</div>
+</div>
+<div class="flex justify-between w-full font-caption text-caption text-on-surface-variant mt-1">
+<span class="font-semibold text-error">Opened</span>
+<span>Reviewing</span>
+<span>Done</span>
+</div>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 w-full py-8 px-6 mt-auto flex flex-col md:flex-row justify-between items-center max-w-[1200px] mx-auto font-public-sans text-xs text-gray-500 transition-opacity duration-150">
+<div>
+            © 2024 Campus Civic Portal. All rights reserved.
+        </div>
+<div class="flex gap-4 mt-4 md:mt-0">
+<a class="text-gray-500 hover:text-blue-600 hover:text-blue-700 transition-colors" href="#">Privacy Policy</a>
+<a class="text-gray-500 hover:text-blue-600 hover:text-blue-700 transition-colors" href="#">Terms of Service</a>
+<a class="text-gray-500 hover:text-blue-600 hover:text-blue-700 transition-colors" href="#">Contact Support</a>
+</div>
+</footer>
+</body></html>

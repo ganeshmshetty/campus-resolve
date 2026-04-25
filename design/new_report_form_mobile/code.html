@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>New Report Form</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#ffb59a",
+                    "primary-fixed-dim": "#b5c4ff",
+                    "on-tertiary-container": "#ffd4c5",
+                    "surface-variant": "#e2e1ed",
+                    "on-background": "#191b23",
+                    "primary": "#003fb1",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#434654",
+                    "tertiary-fixed": "#ffdbcf",
+                    "surface-container-low": "#f3f3fe",
+                    "on-surface": "#191b23",
+                    "background": "#faf8ff",
+                    "on-primary-fixed-variant": "#003dab",
+                    "surface-dim": "#d9d9e4",
+                    "secondary-fixed": "#d9e3f4",
+                    "on-secondary-fixed-variant": "#3e4755",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-tertiary-fixed-variant": "#802a00",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#1a56db",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#121c28",
+                    "surface-container-highest": "#e2e1ed",
+                    "surface": "#faf8ff",
+                    "inverse-on-surface": "#f0f0fb",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e7e7f3",
+                    "secondary-container": "#d6e0f1",
+                    "on-primary-fixed": "#00174d",
+                    "outline": "#737686",
+                    "primary-fixed": "#dbe1ff",
+                    "on-secondary-container": "#596372",
+                    "surface-container": "#ededf8",
+                    "tertiary-container": "#ad3b00",
+                    "surface-tint": "#1353d8",
+                    "surface-bright": "#faf8ff",
+                    "inverse-primary": "#b5c4ff",
+                    "outline-variant": "#c3c5d7",
+                    "on-primary-container": "#d4dcff",
+                    "inverse-surface": "#2e3039",
+                    "error": "#ba1a1a",
+                    "secondary": "#555f6d",
+                    "tertiary": "#852b00",
+                    "secondary-fixed-dim": "#bdc7d8",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "xs": "4px",
+                    "margin-desktop": "64px",
+                    "max-width": "1200px",
+                    "xl": "40px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "body-sm": [
+                            "Public Sans"
+                    ],
+                    "caption": [
+                            "Public Sans"
+                    ],
+                    "label-bold": [
+                            "Public Sans"
+                    ],
+                    "h3": [
+                            "Public Sans"
+                    ],
+                    "body-md": [
+                            "Public Sans"
+                    ],
+                    "h1": [
+                            "Public Sans"
+                    ],
+                    "h2": [
+                            "Public Sans"
+                    ],
+                    "body-lg": [
+                            "Public Sans"
+                    ],
+                    "label-caps": [
+                            "Public Sans"
+                    ]
+            },
+            "fontSize": {
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "caption": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.4",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-bold": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "h3": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.35",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "h1": [
+                            "36px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "h2": [
+                            "30px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md h-screen flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-white dark:bg-gray-900 font-['Public_Sans'] antialiased text-gray-900 dark:text-gray-100 flex items-center justify-between px-4 h-16 w-full max-w-full fixed top-0 left-0 w-full z-50 border-b border-gray-200 dark:border-gray-800 flat no shadows">
+<button class="text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 active:opacity-80 transition-all duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight text-blue-600 dark:text-blue-400">New Report</h1>
+<div class="w-10"></div> <!-- Placeholder for balance -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto pt-[64px] pb-[80px] px-margin-mobile">
+<form class="space-y-xl py-lg max-w-max-width mx-auto">
+<!-- Step 1: Photo Evidence -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-lg shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<div class="mb-md">
+<h2 class="font-h3 text-h3 text-on-surface">Photo Evidence</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Snap a quick picture to help us understand the issue.</p>
+</div>
+<div class="border-2 border-dashed border-outline-variant rounded-lg bg-surface-container-low p-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container transition-colors active:scale-95 duration-150">
+<div class="bg-primary-container text-on-primary-container rounded-full p-4 mb-sm">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+</div>
+<span class="font-label-bold text-label-bold text-primary">Tap to take a photo</span>
+<span class="font-caption text-caption text-outline mt-unit">or upload from gallery</span>
+</div>
+</section>
+<!-- Step 2: Details -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-lg shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-md">
+<div class="mb-md">
+<h2 class="font-h3 text-h3 text-on-surface">Details</h2>
+</div>
+<div class="space-y-xs">
+<label class="font-label-bold text-label-bold text-on-surface block" for="title">Title</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-DEFAULT px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="title" placeholder="e.g., Broken pipe in Main Hall" type="text"/>
+</div>
+<div class="space-y-xs">
+<label class="font-label-bold text-label-bold text-on-surface block" for="category">Category</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-DEFAULT px-md py-sm font-body-md text-body-md text-on-surface appearance-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="category">
+<option disabled="" selected="" value="">Select category...</option>
+<option value="maintenance">Maintenance</option>
+<option value="safety">Safety</option>
+<option value="cleaning">Cleaning</option>
+<option value="other">Other</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="space-y-xs pt-sm">
+<label class="font-label-bold text-label-bold text-on-surface block mb-sm">Urgency</label>
+<div class="flex gap-sm">
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="urgency" type="radio" value="low"/>
+<div class="text-center py-sm px-md border border-outline-variant rounded-DEFAULT font-body-sm text-body-sm text-on-surface-variant peer-checked:bg-secondary-container peer-checked:border-secondary-container peer-checked:text-on-secondary-container peer-checked:font-label-bold transition-all">
+                                Low
+                            </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input checked="" class="peer sr-only" name="urgency" type="radio" value="medium"/>
+<div class="text-center py-sm px-md border border-outline-variant rounded-DEFAULT font-body-sm text-body-sm text-on-surface-variant peer-checked:bg-primary-container peer-checked:border-primary-container peer-checked:text-on-primary-container peer-checked:font-label-bold transition-all">
+                                Medium
+                            </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="urgency" type="radio" value="high"/>
+<div class="text-center py-sm px-md border border-outline-variant rounded-DEFAULT font-body-sm text-body-sm text-on-surface-variant peer-checked:bg-error-container peer-checked:border-error-container peer-checked:text-on-error-container peer-checked:font-label-bold transition-all">
+                                High
+                            </div>
+</label>
+</div>
+</div>
+</section>
+<!-- Step 3: Location -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-lg shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-md">
+<div class="mb-md">
+<h2 class="font-h3 text-h3 text-on-surface">Location</h2>
+</div>
+<div class="space-y-xs">
+<label class="font-label-bold text-label-bold text-on-surface block" for="location">Building / Room</label>
+<div class="flex gap-sm">
+<input class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-DEFAULT px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="location" placeholder="Enter location manually" type="text"/>
+<button class="bg-secondary-container text-on-secondary-container px-md rounded-DEFAULT flex items-center justify-center hover:opacity-90 transition-opacity" title="Use Current GPS" type="button">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</button>
+</div>
+</div>
+<div class="h-[120px] rounded-lg overflow-hidden border border-outline-variant relative bg-surface-container-low mt-sm">
+<img alt="Map View" class="w-full h-full object-cover opacity-80" data-alt="simplified digital map view showing a campus area with streets and buildings in a clean, modern style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJpM_a53h7IhnU_Vn2OYcDfRpFFVrw6sk9H8AAQU5YU1s2caySLfflyQufbTk-Tksi22rj94StPIBas-s9Y2WklN24Mp6Vj8yP4hzJrLvYR93VGdUBAWVFcvR8q4h0utbXOstkDcAzvtM6L9Zt2GFTnEaaT_V-1pTk6LI-1iGzVBDTv4g7kWXUrAqLmVlQpUwdmwngOezNkQBCs241gh1mStDarEq-1S8uB6fOMXY5NZZaKEE1TTkMc9CslmfNFb5OB0CwJU2dnf4I"/>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</section>
+<!-- Step 4: Description -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-lg shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-md">
+<div class="space-y-xs">
+<label class="font-label-bold text-label-bold text-on-surface block" for="description">Description</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-DEFAULT px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none" id="description" placeholder="Provide any additional details..." rows="4"></textarea>
+</div>
+</section>
+<div class="h-xl"></div> <!-- Spacer for sticky bottom -->
+</form>
+</main>
+<!-- Sticky Bottom Action -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-surface-variant p-md pb-safe shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-40">
+<button class="w-full bg-primary text-on-primary font-label-bold text-label-bold py-3 px-6 rounded-full flex items-center justify-center gap-sm active:scale-[0.98] transition-transform shadow-sm" type="button">
+<span>Submit Report</span>
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+</body></html>

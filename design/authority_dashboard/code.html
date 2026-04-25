@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Authority Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#e7e7f3",
+                      "surface-bright": "#faf8ff",
+                      "surface": "#faf8ff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#003fb1",
+                      "on-primary-fixed-variant": "#003dab",
+                      "on-secondary-container": "#596372",
+                      "outline": "#737686",
+                      "on-surface-variant": "#434654",
+                      "surface-dim": "#d9d9e4",
+                      "inverse-surface": "#2e3039",
+                      "tertiary": "#852b00",
+                      "on-secondary-fixed": "#121c28",
+                      "on-error-container": "#93000a",
+                      "surface-container": "#ededf8",
+                      "primary-container": "#1a56db",
+                      "on-tertiary-fixed-variant": "#802a00",
+                      "primary-fixed": "#dbe1ff",
+                      "on-secondary": "#ffffff",
+                      "on-surface": "#191b23",
+                      "secondary-fixed-dim": "#bdc7d8",
+                      "surface-container-highest": "#e2e1ed",
+                      "on-primary-container": "#d4dcff",
+                      "on-tertiary-fixed": "#380d00",
+                      "inverse-on-surface": "#f0f0fb",
+                      "secondary-fixed": "#d9e3f4",
+                      "tertiary-fixed-dim": "#ffb59a",
+                      "secondary-container": "#d6e0f1",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#c3c5d7",
+                      "on-secondary-fixed-variant": "#3e4755",
+                      "on-error": "#ffffff",
+                      "background": "#faf8ff",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#e2e1ed",
+                      "tertiary-fixed": "#ffdbcf",
+                      "tertiary-container": "#ad3b00",
+                      "on-background": "#191b23",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#b5c4ff",
+                      "on-tertiary-container": "#ffd4c5",
+                      "secondary": "#555f6d",
+                      "surface-tint": "#1353d8",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#f3f3fe",
+                      "inverse-primary": "#b5c4ff",
+                      "on-primary-fixed": "#00174d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "unit": "4px",
+                      "margin-desktop": "64px",
+                      "xs": "4px",
+                      "gutter": "24px",
+                      "max-width": "1200px",
+                      "lg": "24px",
+                      "xl": "40px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "caption": [
+                              "Public Sans"
+                      ],
+                      "h2": [
+                              "Public Sans"
+                      ],
+                      "body-md": [
+                              "Public Sans"
+                      ],
+                      "h1": [
+                              "Public Sans"
+                      ],
+                      "body-lg": [
+                              "Public Sans"
+                      ],
+                      "label-bold": [
+                              "Public Sans"
+                      ],
+                      "body-sm": [
+                              "Public Sans"
+                      ],
+                      "label-caps": [
+                              "Public Sans"
+                      ],
+                      "h3": [
+                              "Public Sans"
+                      ]
+              },
+              "fontSize": {
+                      "caption": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h2": [
+                              "30px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h1": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "h3": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.35",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row antialiased">
+<!-- SideNavBar (Desktop) / Hidden on Mobile -->
+<nav class="hidden md:flex bg-gray-50 dark:bg-gray-950 font-public-sans text-sm font-medium h-screen w-64 border-r border-r border-gray-200 dark:border-gray-800 flat no shadows fixed left-0 top-0 h-full flex flex-col p-4 z-40">
+<div class="text-lg font-black text-blue-700 mb-8">
+            CampusResolve
+        </div>
+<div class="mb-6 px-2">
+<div class="flex items-center gap-3">
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="Professional headshot of a middle-aged man in a business casual shirt, neutral background, bright lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzxYQ48BQLbz-XGgaCHUsQZOP6UggIKys7NuhBSeLdoIBun5yRh6Tv10aObuJdPxsYXSjxSLsNc-UXomYm7iEljrFz29srLJaoB1pPL4ciLqXC1C4Z6uQ6-NjBm71BMMYQQQ8ZspGr8BuHERSc8ywEQYq-K3ZbM-FeXT9vZovS8rAiRyS82VBXSqznaoohthZeYSj64ibP6t9_2lvdgUZmrExBqLMpP3qfhGkF1tXnMOGgW-WixjnppjKMZ7S1hSWFXwE5BmuxLO23"/>
+<div>
+<div class="font-label-bold text-on-surface">Admin Portal</div>
+<div class="font-caption text-on-surface-variant">Campus Management</div>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-2 px-4 rounded-DEFAULT font-label-bold mb-6 hover:bg-surface-tint transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+            Create Report
+        </button>
+<ul class="flex flex-col gap-1 flex-grow">
+<li>
+<a class="bg-white dark:bg-gray-900 text-blue-700 dark:text-blue-400 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Overview
+                </a>
+</li>
+<li>
+<a class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">assignment</span>
+                    All Reports
+                </a>
+</li>
+<li>
+<a class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+                    Analytics
+                </a>
+</li>
+<li>
+<a class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">group</span>
+                    Users
+                </a>
+</li>
+<li>
+<a class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</li>
+</ul>
+<div class="mt-auto">
+<a class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">help</span>
+                Help Center
+            </a>
+</div>
+</nav>
+<!-- TopNavBar (Mobile) / Top Bar (Desktop) -->
+<div class="flex-grow flex flex-col md:ml-64 bg-surface-container-low min-h-screen">
+<header class="bg-white dark:bg-gray-900 text-blue-700 dark:text-blue-400 font-public-sans antialiased docked full-width top-0 border-b border-b border-gray-200 dark:border-gray-800 flat no shadows flex justify-between items-center w-full px-6 h-16 max-w-[1200px] mx-auto z-30 sticky md:hidden">
+<div class="text-xl font-bold text-blue-700 dark:text-blue-500">
+                CampusResolve
+            </div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors p-2 rounded-full">notifications</span>
+<span class="material-symbols-outlined cursor-pointer duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors p-2 rounded-full">account_circle</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow p-4 md:p-lg max-w-[1200px] mx-auto w-full">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-4">
+<div>
+<h1 class="font-h1 text-on-surface">Inbox Dashboard</h1>
+<p class="font-body-md text-on-surface-variant mt-1">Review and manage assigned reports requiring your attention.</p>
+</div>
+<div class="flex gap-3 w-full md:w-auto">
+<div class="relative w-full md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-DEFAULT focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-sm text-on-surface" placeholder="Search ID, title..." type="text"/>
+</div>
+</div>
+</div>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-md mb-xl">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-bold text-on-surface-variant">Pending Review</span>
+<span class="material-symbols-outlined text-primary">pending_actions</span>
+</div>
+<div class="z-10">
+<span class="font-h1 text-on-surface">12</span>
+<span class="font-caption text-error ml-2 flex items-center inline-flex"><span class="material-symbols-outlined text-[16px] mr-1">trending_up</span> +3 today</span>
+</div>
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary-fixed-dim rounded-full blur-2xl opacity-30"></div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-bold text-on-surface-variant">High Priority</span>
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div class="z-10">
+<span class="font-h1 text-on-surface">4</span>
+<span class="font-caption text-on-surface-variant ml-2">Requires immediate action</span>
+</div>
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-error-container rounded-full blur-2xl opacity-40"></div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-bold text-on-surface-variant">In Progress</span>
+<span class="material-symbols-outlined text-surface-tint">autorenew</span>
+</div>
+<div class="z-10">
+<span class="font-h1 text-on-surface">28</span>
+<span class="font-caption text-on-surface-variant ml-2">Active investigations</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-bold text-on-surface-variant">Resolved (7d)</span>
+<span class="material-symbols-outlined text-[#166534]">check_circle</span>
+</div>
+<div class="z-10">
+<span class="font-h1 text-on-surface">45</span>
+<span class="font-caption text-[#166534] ml-2 flex items-center inline-flex"><span class="material-symbols-outlined text-[16px] mr-1">trending_up</span> +12% vs last week</span>
+</div>
+</div>
+</div>
+<!-- Main Content Area: Inbox Style List -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col h-[600px]">
+<!-- List Header / Filters -->
+<div class="border-b border-outline-variant p-4 flex justify-between items-center bg-surface-bright">
+<div class="flex gap-4">
+<button class="font-label-bold text-primary border-b-2 border-primary pb-1">All Active</button>
+<button class="font-label-bold text-on-surface-variant hover:text-on-surface transition-colors pb-1">Unread</button>
+<button class="font-label-bold text-on-surface-variant hover:text-on-surface transition-colors pb-1">Starred</button>
+</div>
+<button class="flex items-center gap-2 text-on-surface-variant font-label-bold hover:text-on-surface border border-outline-variant rounded px-3 py-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        Filter
+                    </button>
+</div>
+<!-- Inbox Items -->
+<div class="overflow-y-auto flex-grow bg-surface-container-lowest">
+<!-- Item 1 (Unread, High Priority) -->
+<div class="border-b border-outline-variant hover:bg-surface-container-high transition-colors p-4 cursor-pointer flex flex-col md:flex-row gap-4 bg-surface-container">
+<div class="flex items-start gap-4 w-full md:w-1/3">
+<div class="w-3 h-3 rounded-full bg-primary mt-1.5 flex-shrink-0"></div>
+<div>
+<div class="font-label-bold text-on-surface">#REP-2024-0892</div>
+<div class="font-caption text-on-surface-variant">Reported by: Student A. • 10 mins ago</div>
+<div class="mt-2 inline-flex items-center gap-1 bg-[#fee2e2] text-[#991b1b] px-2 py-0.5 rounded font-label-caps border border-[#f87171]">
+<span class="material-symbols-outlined text-[12px]">warning</span> High Priority
+                                </div>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<h3 class="font-body-md font-semibold text-on-surface">Water Leak in Library Main Hall</h3>
+<p class="font-body-sm text-on-surface-variant line-clamp-2 mt-1">Significant water dripping from the ceiling near the fiction section on the second floor. Several books appear to be getting wet. Needs immediate maintenance attention before structural damage occurs.</p>
+</div>
+<div class="w-full md:w-1/6 flex md:flex-col justify-between items-end gap-2">
+<div class="inline-flex bg-primary-container text-on-primary-container px-2 py-1 rounded font-label-caps">New</div>
+<div class="flex gap-2">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-highest rounded border border-outline-variant" title="Change Status">
+<span class="material-symbols-outlined text-[20px]">swap_horiz</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-highest rounded border border-outline-variant" title="Add Note">
+<span class="material-symbols-outlined text-[20px]">post_add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="border-b border-outline-variant hover:bg-surface-container-high transition-colors p-4 cursor-pointer flex flex-col md:flex-row gap-4">
+<div class="flex items-start gap-4 w-full md:w-1/3">
+<div class="w-3 h-3 rounded-full bg-transparent border border-outline mt-1.5 flex-shrink-0"></div>
+<div>
+<div class="font-label-bold text-on-surface">#REP-2024-0891</div>
+<div class="font-caption text-on-surface-variant">Reported by: Faculty B. • 2 hours ago</div>
+<div class="mt-2 inline-flex items-center gap-1 bg-surface-variant text-on-surface px-2 py-0.5 rounded font-label-caps border border-outline-variant">
+                                    Medium Priority
+                                </div>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<h3 class="font-body-md font-semibold text-on-surface">Projector Malfunction in Room 302</h3>
+<p class="font-body-sm text-on-surface-variant line-clamp-2 mt-1">The main projector is displaying distorted colors and flickering intermittently. It was working fine yesterday but is completely unusable for today's lectures.</p>
+</div>
+<div class="w-full md:w-1/6 flex md:flex-col justify-between items-end gap-2">
+<div class="inline-flex bg-[#fef08a] text-[#854d0e] px-2 py-1 rounded font-label-caps">In Progress</div>
+<div class="flex gap-2">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-highest rounded border border-outline-variant" title="Change Status">
+<span class="material-symbols-outlined text-[20px]">swap_horiz</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-highest rounded border border-outline-variant" title="Add Note">
+<span class="material-symbols-outlined text-[20px]">post_add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="border-b border-outline-variant hover:bg-surface-container-high transition-colors p-4 cursor-pointer flex flex-col md:flex-row gap-4">
+<div class="flex items-start gap-4 w-full md:w-1/3">
+<div class="w-3 h-3 rounded-full bg-transparent border border-outline mt-1.5 flex-shrink-0"></div>
+<div>
+<div class="font-label-bold text-on-surface">#REP-2024-0888</div>
+<div class="font-caption text-on-surface-variant">Reported by: Anonymous • Yesterday</div>
+<div class="mt-2 inline-flex items-center gap-1 bg-[#dcfce7] text-[#166534] px-2 py-0.5 rounded font-label-caps border border-[#86efac]">
+                                    Low Priority
+                                </div>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<h3 class="font-body-md font-semibold text-on-surface">Overgrown bushes near North Entrance</h3>
+<p class="font-body-sm text-on-surface-variant line-clamp-2 mt-1">The landscaping near the north pedestrian walkway needs trimming. The bushes are encroaching on the path making it difficult for wheelchairs to pass easily.</p>
+</div>
+<div class="w-full md:w-1/6 flex md:flex-col justify-between items-end gap-2">
+<div class="inline-flex bg-surface-container-highest text-on-surface-variant px-2 py-1 rounded font-label-caps">Under Review</div>
+<div class="flex gap-2">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-highest rounded border border-outline-variant" title="Change Status">
+<span class="material-symbols-outlined text-[20px]">swap_horiz</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-highest rounded border border-outline-variant" title="Add Note">
+<span class="material-symbols-outlined text-[20px]">post_add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-gray-900 text-blue-700 dark:text-blue-400 font-public-sans text-xs text-gray-500 full-width border-t border-t border-gray-200 dark:border-gray-800 flat no shadows w-full py-8 px-6 mt-auto flex flex-col md:flex-row justify-between items-center max-w-[1200px] mx-auto transition-opacity duration-150">
+<div>
+                © 2024 Campus Civic Portal. All rights reserved.
+            </div>
+<div class="flex gap-4 mt-4 md:mt-0">
+<a class="text-gray-500 hover:text-blue-600 hover:text-blue-700" href="#">Privacy Policy</a>
+<a class="text-gray-500 hover:text-blue-600 hover:text-blue-700" href="#">Terms of Service</a>
+<a class="text-gray-500 hover:text-blue-600 hover:text-blue-700" href="#">Contact Support</a>
+</div>
+</footer>
+</div>
+</body></html>
