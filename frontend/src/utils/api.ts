@@ -5,13 +5,16 @@ export const BASE_URL = VITE_API_URL
   : '/api'
 
 export class ApiError extends Error {
-  constructor(
-    public message: string,
-    public status: number,
-    public details?: any
-  ) {
+  status: number
+  details?: any
+
+  constructor(message: string, status: number, details?: any) {
     super(message)
     this.name = 'ApiError'
+    this.status = status
+    this.details = details
+    // Ensure the prototype is correctly set for instanceOf checks
+    Object.setPrototypeOf(this, ApiError.prototype)
   }
 }
 
