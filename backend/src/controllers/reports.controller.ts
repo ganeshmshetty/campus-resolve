@@ -3,13 +3,20 @@ import { HTTP_STATUS } from '../constants/http.js'
 import { reportsService } from '../services/reports.service.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { HttpError } from '../utils/httpError.js'
+import type { AuthUser } from '../types/domain.js'
+
+type RequestWithAuth = Request & {
+  user?: AuthUser
+}
 
 function getAuthenticatedUser(req: Request) {
-  if (!req.user) {
+  const authReq = req as RequestWithAuth
+
+  if (!authReq.user) {
     throw new HttpError(HTTP_STATUS.unauthorized, 'Not authenticated')
   }
 
-  return req.user
+  return authReq.user
 }
 
 function getReportId(req: Request) {

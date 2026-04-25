@@ -2,6 +2,11 @@ import type { Request, Response } from 'express'
 import { authService } from '../services/auth.service.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { HTTP_STATUS } from '../constants/http.js'
+import type { AuthUser } from '../types/domain.js'
+
+type RequestWithAuth = Request & {
+  user?: AuthUser
+}
 
 export const authController = {
   register: asyncHandler(async (req: Request, res: Response) => {
@@ -15,6 +20,7 @@ export const authController = {
   }),
 
   me: asyncHandler(async (req: Request, res: Response) => {
-    res.json({ data: req.user })
+    const authReq = req as RequestWithAuth
+    res.json({ data: authReq.user ?? null })
   }),
 }
