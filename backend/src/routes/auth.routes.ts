@@ -8,6 +8,8 @@ const authRouter = Router()
 
 authRouter.post('/register', validate(registerSchema), authController.register)
 authRouter.post('/login', validate(loginSchema), authController.login)
+authRouter.post('/oauth-mock', authController.oauthMock)
+authRouter.post('/oauth/google/start', authController.startGoogleOAuth)
 authRouter.get('/me', requireAuth, authController.me)
 
 export { authRouter }

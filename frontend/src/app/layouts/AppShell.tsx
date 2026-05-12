@@ -25,10 +25,10 @@ export function AppShell() {
 
   useEffect(() => {
     api.get<{status: string}>('/health')
-      .then(res => setBackendStatus(res.status === 'ok' ? 'Backend Connected ✅' : 'Backend Issue ⚠️'))
+      .then(res => setBackendStatus(res.status === 'ok' ? 'Backend connected' : 'Backend issue'))
       .catch(err => {
         console.error('Health check failed:', err)
-        setBackendStatus('Backend Error ❌')
+        setBackendStatus('Backend error')
       })
   }, [])
 
@@ -40,8 +40,9 @@ export function AppShell() {
   }
 
   const navItems = [
-    { to: '/', label: 'Dashboard', end: true },
-    { to: '/reports/new', label: 'Reports' },
+    { to: '/', label: 'Home', end: true },
+    { to: '/reports', label: 'Reports' },
+    { to: '/reports/new', label: 'Create New' },
     { to: '/map', label: 'Map' },
   ]
 
@@ -72,18 +73,23 @@ export function AppShell() {
           </nav>
 
           <div className="button-row" style={{ color: 'var(--color-primary)', alignItems: 'center' }}>
-            <button className="btn btn--ghost" style={{ padding: '8px', borderRadius: '50%' }}>
-              <span className="material-symbols-outlined icon">notifications</span>
-            </button>
             {user ? (
               <div className="split" style={{ gap: '12px' }}>
-                <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-on-surface)' }}>{user.name || user.email}</span>
-                <button onClick={handleLogout} className="btn btn--ghost" style={{ padding: '8px', borderRadius: '50%' }} title="Logout">
+                <Link 
+                  to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'authority' ? '/authority/dashboard' : '/user/dashboard'}
+                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', color: 'inherit' }}
+                  className="btn btn--ghost"
+                  aria-label="Open account dashboard"
+                >
+                  <span className="material-symbols-outlined icon">account_circle</span>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>{user.name || user.email}</span>
+                </Link>
+                <button onClick={handleLogout} className="btn btn--ghost" style={{ padding: '8px', borderRadius: '50%' }} title="Logout" aria-label="Log out">
                   <span className="material-symbols-outlined icon">logout</span>
                 </button>
               </div>
             ) : (
-              <Link to="/auth" className="btn btn--ghost" style={{ padding: '8px', borderRadius: '50%' }} title="Login">
+              <Link to="/auth" className="btn btn--ghost" style={{ padding: '8px', borderRadius: '50%' }} title="Login" aria-label="Log in">
                 <span className="material-symbols-outlined icon">account_circle</span>
               </Link>
             )}
@@ -99,9 +105,13 @@ export function AppShell() {
           <span className="material-symbols-outlined icon" style={{ fontSize: '24px' }}>home</span>
           <span>Home</span>
         </NavLink>
+        <NavLink to="/reports" end className={({ isActive }) => isActive ? 'bottom-nav__link bottom-nav__link--active' : 'bottom-nav__link'}>
+          <span className="material-symbols-outlined icon" style={{ fontSize: '24px' }}>view_list</span>
+          <span>Reports</span>
+        </NavLink>
         <NavLink to="/reports/new" className={({ isActive }) => isActive ? 'bottom-nav__link bottom-nav__link--active' : 'bottom-nav__link'}>
           <span className="material-symbols-outlined icon" style={{ fontSize: '24px' }}>add_circle</span>
-          <span>Report</span>
+          <span>Create</span>
         </NavLink>
         {user ? (
           <NavLink to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'authority' ? '/authority/dashboard' : '/user/dashboard'} className={({ isActive }) => isActive ? 'bottom-nav__link bottom-nav__link--active' : 'bottom-nav__link'}>
@@ -114,26 +124,16 @@ export function AppShell() {
             <span>Login</span>
           </NavLink>
         )}
-        {user && (
-          <button className="bottom-nav__link" onClick={handleLogout} style={{ cursor: 'pointer', background: 'none', border: 'none', font: 'inherit', color: 'inherit', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '8px 0' }}>
-            <span className="material-symbols-outlined icon" style={{ fontSize: '24px' }}>logout</span>
-            <span>Logout</span>
-          </button>
-        )}
       </nav>
       
       <footer style={{ borderTop: '1px solid var(--color-outline-variant)', marginTop: 'auto', paddingBlock: 'var(--space-5)' }}>
         <div className="container split" style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-variant)' }}>
           <div className="split" style={{ justifyContent: 'flex-start', gap: '8px' }}>
-            <span>© 2024 Campus Resolve Portal. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} Campus Resolve Portal. All rights reserved.</span>
             <span>|</span>
-            <span style={{ fontWeight: 600, color: backendStatus.includes('✅') ? 'var(--status-resolved)' : 'var(--color-error)' }}>{backendStatus}</span>
+            <span style={{ fontWeight: 600, color: backendStatus === 'Backend connected' ? 'var(--status-resolved)' : 'var(--color-error)' }}>{backendStatus}</span>
           </div>
-          <div className="button-row" style={{ gap: 'var(--space-4)' }}>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Support</a>
-          </div>
+          <span>For urgent campus issues, contact the facilities desk directly.</span>
         </div>
       </footer>
     </div>

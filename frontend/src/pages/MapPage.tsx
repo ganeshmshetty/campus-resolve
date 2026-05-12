@@ -1,42 +1,26 @@
-import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { useEffect, useState, useMemo } from 'react'
+import Map, { Marker, Popup, NavigationControl } from 'react-map-gl/maplibre'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { PageHeader } from '../components/shared/PageHeader'
+import { LoadingState } from '../components/shared/LoadingState'
 import { StatusChip } from '../components/ui/StatusChip'
 import { api } from '../utils/api'
 import type { Report } from '../types/domain'
 import { Link } from 'react-router-dom'
 
-// Fix default marker icon issue with webpack/vite
-import L from 'leaflet'
-import icon from 'leaflet/dist/images/marker-icon.png'
-import iconShadow from 'leaflet/dist/images/marker-shadow.png'
-
-const DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-})
-L.Marker.prototype.options.icon = DefaultIcon
-
-function MapUpdater({ center }: { center: [number, number] }) {
-  const map = useMap()
-  map.setView(center)
-  return null
-}
-
 export function MapPage() {
   const [reports, setReports] = useState<Report[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null)
 
   // Default campus center (fallback)
-  const defaultCenter: [number, number] = [12.9716, 77.5946]
+  const defaultCenter = { latitude: 12.9716, longitude: 77.5946, zoom: 15 }
 
   useEffect(() => {
     async function fetchReports() {
       try {
-        const response = await api.get<{ data: Report[] }>('/reports')
+        const response = await api.get<{ data: Report[] }>('/reports/public')
         setReports(response.data)
       } catch (err: any) {
         setError(err.message || 'Failed to fetch map data')
@@ -49,7 +33,7 @@ export function MapPage() {
   }, [])
 
   // Filter reports with valid coordinates
-  const mappedReports = reports.filter(r => r.latitude !== null && r.longitude !== null).map(r => {
+  const mappedReports = useMemo(() => reports.filter(r => r.latitude !== null && r.longitude !== null).map(r => {
     // Add small deterministic jitter to prevent overlap
     let hash = 0;
     for (let i = 0; i < r.id.length; i++) hash = r.id.charCodeAt(i) + ((hash << 5) - hash);
@@ -60,10 +44,10 @@ export function MapPage() {
       latitude: r.latitude! + jitterLat,
       longitude: r.longitude! + jitterLng
     }
-  })
+  }), [reports]);
 
-  const mapCenter = mappedReports.length > 0 
-    ? [mappedReports[0].latitude, mappedReports[0].longitude] as [number, number]
+  const initialViewState = mappedReports.length > 0 
+    ? { latitude: mappedReports[0].latitude!, longitude: mappedReports[0].longitude!, zoom: 15 }
     : defaultCenter
 
   return (
@@ -75,15 +59,13 @@ export function MapPage() {
       />
 
       {error && (
-        <div style={{ color: 'var(--color-error)', padding: 'var(--space-4)', background: 'var(--color-error-container)', borderRadius: 'var(--radius-md)' }}>
+        <div className="error-banner" role="alert">
           {error}
         </div>
       )}
 
       {isLoading ? (
-        <div style={{ textAlign: 'center', padding: 'var(--space-7)', color: 'var(--color-on-surface-variant)' }}>
-          Loading map data...
-        </div>
+        <LoadingState variant="map" />
       ) : (
         <div style={{ 
           height: '60vh', 
@@ -94,43 +76,68 @@ export function MapPage() {
           border: '1px solid var(--color-outline-variant)',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
         }}>
-          <MapContainer center={mapCenter} zoom={15} style={{ height: '100%', width: '100%', zIndex: 0 }}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <MapUpdater center={mapCenter} />
+          <Map
+            initialViewState={initialViewState}
+            mapStyle="https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+          >
+            <NavigationControl position="top-right" />
             
             {mappedReports.map(report => (
-              <Marker key={report.id} position={[report.latitude!, report.longitude!]}>
-                <Popup>
-                  <div style={{ minWidth: '200px' }}>
-                    <div style={{ marginBottom: '8px' }}>
-                      <strong>{report.title}</strong>
-                    </div>
-                    <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <StatusChip status={report.status} style={{ fontSize: '10px', padding: '2px 6px' }} />
-                      <span style={{ fontSize: '12px', color: '#666' }}>{report.category}</span>
-                    </div>
-                    <p style={{ fontSize: '12px', margin: '0 0 12px 0', color: '#444' }}>{report.address}</p>
-                    <Link to={`/reports/${report.id}`} style={{ 
-                      display: 'block', 
-                      textAlign: 'center', 
-                      padding: '6px 12px', 
-                      background: 'var(--color-primary)', 
-                      color: 'white', 
-                      textDecoration: 'none', 
-                      borderRadius: '4px',
-                      fontSize: '12px',
-                      fontWeight: 600
-                    }}>
-                      View Details
-                    </Link>
-                  </div>
-                </Popup>
+              <Marker 
+                key={report.id} 
+                latitude={report.latitude!} 
+                longitude={report.longitude!}
+                onClick={e => {
+                  e.originalEvent.stopPropagation()
+                  setSelectedReport(report)
+                }}
+              >
+                <div style={{
+                  backgroundColor: 'var(--color-primary)',
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  border: '3px solid white',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                }} />
               </Marker>
             ))}
-          </MapContainer>
+
+            {selectedReport && (
+              <Popup
+                latitude={selectedReport.latitude!}
+                longitude={selectedReport.longitude!}
+                anchor="bottom"
+                onClose={() => setSelectedReport(null)}
+                closeOnClick={false}
+              >
+                <div style={{ minWidth: '200px', padding: '8px' }}>
+                  <div style={{ marginBottom: '8px' }}>
+                    <strong>{selectedReport.title}</strong>
+                  </div>
+                  <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <StatusChip status={selectedReport.status} style={{ fontSize: '10px', padding: '2px 6px' }} />
+                    <span style={{ fontSize: '12px', color: '#666' }}>{selectedReport.category}</span>
+                  </div>
+                  <p style={{ fontSize: '12px', margin: '0 0 12px 0', color: '#444' }}>{selectedReport.address}</p>
+                  <Link to={`/reports/${selectedReport.id}`} style={{ 
+                    display: 'block', 
+                    textAlign: 'center', 
+                    padding: '6px 12px', 
+                    background: 'var(--color-primary)', 
+                    color: 'white', 
+                    textDecoration: 'none', 
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: 600
+                  }}>
+                    View Details
+                  </Link>
+                </div>
+              </Popup>
+            )}
+          </Map>
         </div>
       )}
     </div>

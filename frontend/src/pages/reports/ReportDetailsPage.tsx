@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { PageHeader } from '../../components/shared/PageHeader'
+import { LoadingState } from '../../components/shared/LoadingState'
 import { Card } from '../../components/ui/Card'
 import { StatusChip } from '../../components/ui/StatusChip'
 import { Button } from '../../components/ui/Button'
@@ -66,7 +67,7 @@ export function ReportDetailsPage() {
     }
   }
 
-  if (isLoading) return <div style={{ textAlign: 'center', padding: 'var(--space-7)' }}>Loading details...</div>
+  if (isLoading) return <LoadingState count={2} />
   if (error || !data) return (
     <div className="card" style={{ textAlign: 'center', padding: 'var(--space-7)' }}>
       <p style={{ color: 'var(--color-error)' }}>{error || 'Report not found'}</p>
@@ -141,7 +142,7 @@ export function ReportDetailsPage() {
             <div style={{ marginTop: 'var(--space-4)', borderTop: '1px solid var(--color-outline-variant)', paddingTop: 'var(--space-4)' }}>
               <h3>Post an Update</h3>
               {updateError && (
-                <div style={{ color: 'var(--color-error)', padding: 'var(--space-2)', marginBottom: 'var(--space-2)', background: 'var(--color-error-container)', borderRadius: 'var(--radius-md)' }}>
+                <div className="error-banner" role="alert" style={{ padding: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
                   {updateError}
                 </div>
               )}

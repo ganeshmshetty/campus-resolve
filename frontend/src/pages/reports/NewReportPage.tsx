@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { REPORT_CATEGORIES } from '../../types/domain'
 import { Button } from '../../components/ui/Button'
 import { TextInput } from '../../components/ui/TextInput'
@@ -114,7 +114,7 @@ export function NewReportPage() {
         <div className="card" style={{ padding: 'var(--space-6)' }}>
           <form className="form-stack" onSubmit={handleSubmit}>
             {error && (
-              <div style={{ color: 'var(--color-error)', padding: 'var(--space-4)', background: 'var(--color-error-container)', borderRadius: 'var(--radius-md)' }}>
+              <div className="error-banner" role="alert">
                 {error}
               </div>
             )}
@@ -195,7 +195,7 @@ export function NewReportPage() {
                       Clear Location
                     </Button>
                   )}
-                  {gpsError && <p style={{ color: 'var(--color-error)', fontSize: '12px', marginTop: '4px', width: '100%' }}>{gpsError}</p>}
+                  {gpsError && <p role="alert" style={{ color: 'var(--color-error)', fontSize: '12px', marginTop: '4px', width: '100%' }}>{gpsError}</p>}
                   {latitude && longitude && <p style={{ color: 'var(--status-resolved)', fontSize: '12px', marginTop: '4px', width: '100%' }}>Detected: {latitude.toFixed(4)}, {longitude.toFixed(4)}</p>}
                 </div>
               </div>
@@ -215,8 +215,8 @@ export function NewReportPage() {
                   <span className="material-symbols-outlined icon" style={{ fontSize: '32px' }}>add_a_photo</span>
                 </div>
                 <div>
-                  <p style={{ fontWeight: 700 }}>{selectedFiles.length > 0 ? `${selectedFiles.length} files selected` : 'Click to upload or drag and drop'}</p>
-                  <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)' }}>PNG, JPG or GIF (MAX. 10MB)</p>
+                  <p style={{ fontWeight: 700 }}>{selectedFiles.length > 0 ? `${selectedFiles.length} files selected` : 'Click to upload evidence photos'}</p>
+                  <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)' }}>PNG, JPG, GIF, or camera images up to 5MB each</p>
                 </div>
                 <input 
                   type="file" 
@@ -239,7 +239,6 @@ export function NewReportPage() {
             </section>
 
             <div className="button-row" style={{ justifyContent: 'flex-end', borderTop: '1px solid var(--color-outline-variant)', paddingTop: 'var(--space-6)' }}>
-              <Button type="button" variant="ghost" disabled={isLoading}>Save Draft</Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? 'Submitting...' : 'Submit Report'}
                 {!isLoading && <span className="material-symbols-outlined icon">send</span>}
@@ -267,7 +266,7 @@ export function NewReportPage() {
               </li>
               <li className="split" style={{ justifyContent: 'flex-start', alignItems: 'flex-start', gap: '8px' }}>
                 <span className="material-symbols-outlined icon text-primary" style={{ fontSize: '18px' }}>check_circle</span>
-                <span>For immediate emergencies (fire, medical), call 911 immediately.</span>
+                <span>For immediate emergencies, use the official campus emergency contact or local emergency services.</span>
               </li>
             </ul>
           </div>
@@ -277,10 +276,6 @@ export function NewReportPage() {
             <p style={{ fontSize: '14px', color: 'var(--color-on-surface-variant)' }}>
               If you are unsure how to classify an issue, contact the facilities helpdesk.
             </p>
-            <Link to="#" className="inline-link split" style={{ width: 'fit-content' }}>
-              Contact Helpdesk
-              <span className="material-symbols-outlined icon" style={{ fontSize: '16px' }}>arrow_forward</span>
-            </Link>
           </div>
         </div>
       </aside>
