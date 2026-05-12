@@ -4,7 +4,6 @@
   --color-surface-low: #f3f3fe;
   --color-surface-container: #ededf8;
   --color-surface-high: #e7e7f3;
-  --color-surface-variant: #eef1f7;
   --color-on-surface: #191b23;
   --color-on-surface-variant: #434654;
   --color-outline: #737686;
@@ -16,13 +15,9 @@
 
   --color-secondary: #555f6d;
   --color-on-secondary: #ffffff;
-  --color-tertiary: #006b5b;
-  --tertiary: var(--color-tertiary);
 
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
-  --color-error-container: #ffdad6;
-  --color-on-error-container: #410002;
 
   --status-open: #1353d8;
   --status-acknowledged: #5b6b82;

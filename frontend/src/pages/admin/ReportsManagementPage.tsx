@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Card } from '../../components/ui/Card'
 import { PageHeader } from '../../components/shared/PageHeader'
-import { LoadingState } from '../../components/shared/LoadingState'
 import { Button } from '../../components/ui/Button'
 import { StatusChip } from '../../components/ui/StatusChip'
 import { api } from '../../utils/api'
@@ -37,44 +36,46 @@ export function ReportsManagementPage() {
       />
 
       <Card>
-        {isLoading ? (
-          <LoadingState variant="table" count={5} />
-        ) : (
-          <div className="table-scroll">
-            <table className="table">
-              <thead>
+        <div className="table-scroll">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Report</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
                 <tr>
-                  <th>Report</th>
-                  <th>Category</th>
-                  <th>Status</th>
-                  <th>Created At</th>
-                  <th>Action</th>
+                  <td colSpan={5} style={{ textAlign: 'center', paddingBlock: '24px' }}>
+                    Loading reports...
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {reports.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} style={{ textAlign: 'center', paddingBlock: '24px' }}>
-                      No report records loaded yet.
+              ) : reports.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: 'center', paddingBlock: '24px' }}>
+                    No report records loaded yet.
+                  </td>
+                </tr>
+              ) : (
+                reports.map(report => (
+                  <tr key={report.id}>
+                    <td>{report.title}</td>
+                    <td>{report.category}</td>
+                    <td><StatusChip status={report.status} style={{ fontSize: '10px' }} /></td>
+                    <td>{new Date(report.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <Link to={`/reports/${report.id}`} className="btn btn--sm btn--ghost">View</Link>
                     </td>
                   </tr>
-                ) : (
-                  reports.map(report => (
-                    <tr key={report.id}>
-                      <td>{report.title}</td>
-                      <td>{report.category}</td>
-                      <td><StatusChip status={report.status} style={{ fontSize: '10px' }} /></td>
-                      <td>{new Date(report.created_at).toLocaleDateString()}</td>
-                      <td>
-                        <Link to={`/reports/${report.id}`} className="btn btn--sm btn--ghost">View</Link>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
         <div className="button-row">
           <Button size="sm" onClick={fetchReports} disabled={isLoading}>Refresh</Button>
         </div>

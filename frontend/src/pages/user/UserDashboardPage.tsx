@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { StatusChip } from '../../components/ui/StatusChip'
-import { LoadingState } from '../../components/shared/LoadingState'
 import type { ReportStatus, Report } from '../../types/domain'
 import { api } from '../../utils/api'
 
@@ -141,13 +140,15 @@ export function UserDashboardPage() {
         </div>
 
         {error && (
-          <div className="error-banner" role="alert">
+          <div style={{ color: 'var(--color-error)', padding: 'var(--space-4)', background: 'var(--color-error-container)', borderRadius: 'var(--radius-md)' }}>
             {error}
           </div>
         )}
 
         {isLoading ? (
-          <LoadingState count={3} />
+          <div style={{ textAlign: 'center', padding: 'var(--space-7)', color: 'var(--color-on-surface-variant)' }}>
+            Loading your reports...
+          </div>
         ) : reports.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: 'var(--space-7)' }}>
             <p>You haven't submitted any reports yet.</p>

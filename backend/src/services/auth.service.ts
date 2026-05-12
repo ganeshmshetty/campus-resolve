@@ -18,10 +18,6 @@ type LoginInput = {
   password: string
 }
 
-type StartGoogleOAuthInput = {
-  redirectTo: string
-}
-
 function buildMockToken(user: AuthUser) {
   return Buffer.from(JSON.stringify(user)).toString('base64url')
 }
@@ -195,52 +191,12 @@ export const authService = {
     return this.register({ ...input, role: 'authority' })
   },
 
-  async oauthMock(input: { provider: string }) {
-    const email = input.provider === 'google' ? 'student@campus.edu' : 'admin@campus.edu'
-    const name = input.provider === 'google' ? 'Student Demo' : 'Admin Demo'
-    const role = input.provider === 'google' ? 'user' : 'admin'
-    const password = 'oauth-mock-password'
-
-    try {
-      await this.register({ name, email, password, role })
-    } catch (e: any) {
-      if (!e.message?.includes('already registered')) {
-        console.warn('Registration failed:', e.message)
-      }
-    }
-
-    return this.login({ email, password })
-  },
-
   async login(input: LoginInput) {
     if (isSupabaseConfigured) {
       return loginWithSupabase(input)
     }
 
     return loginInMock(input)
-  },
-
-  async startGoogleOAuth(input: StartGoogleOAuthInput) {
-    if (!isSupabaseConfigured) {
-      throw new HttpError(
-        HTTP_STATUS.badRequest,
-        'Google OAuth is unavailable until Supabase auth is configured',
-      )
-    }
-
-    const client = getPublicSupabaseClient()
-    const { data, error } = await client.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: input.redirectTo,
-      },
-    })
-
-    if (error || !data.url) {
-      throw new HttpError(HTTP_STATUS.badRequest, error?.message ?? 'Unable to start Google OAuth')
-    }
-
-    return { url: data.url }
   },
 
   async getCurrentUser(accessToken: string) {

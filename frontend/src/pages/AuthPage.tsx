@@ -1,109 +1,52 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '../components/ui/Button'
-import { api } from '../utils/api'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { TextInput } from '../components/ui/TextInput'
-
-type AuthResponse = {
-  data: {
-    accessToken: string
-    user: {
-      role: string
-      name?: string
-      email: string
-    }
-  }
-}
+import { Button } from '../components/ui/Button'
+import { api, ApiError } from '../utils/api'
 
 export function AuthPage() {
   const navigate = useNavigate()
+  const [isLogin, setIsLogin] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
 
-  function navigateByRole(role: string) {
-    if (role === 'admin') {
-      navigate('/admin/dashboard')
-      return
-    }
-
-    if (role === 'authority') {
-      navigate('/authority/dashboard')
-      return
-    }
-
-    navigate('/')
-  }
-
-  useEffect(() => {
-    async function completeOAuthLogin() {
-      const hash = window.location.hash.startsWith('#')
-        ? window.location.hash.slice(1)
-        : window.location.hash
-
-      if (!hash) {
-        return
-      }
-
-      const params = new URLSearchParams(hash)
-      const accessToken = params.get('access_token')
-
-      if (!accessToken) {
-        return
-      }
-
-      setIsLoading(true)
-      setError(null)
-
-      try {
-        localStorage.setItem('access_token', accessToken)
-        const meResponse = await api.get<{ data: { role: string; name?: string; email: string } }>('/auth/me')
-        localStorage.setItem('user', JSON.stringify(meResponse.data))
-        window.history.replaceState(null, '', window.location.pathname)
-        navigateByRole(meResponse.data.role)
-      } catch (err) {
-        localStorage.removeItem('access_token')
-        setError(err instanceof Error ? err.message : 'Unable to complete Google login')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    completeOAuthLogin()
-  }, [navigate])
-
-  async function handleGoogleLogin() {
-    setError(null)
-    setIsLoading(true)
-
-    try {
-      const redirectTo = `${window.location.origin}/auth`
-      const response = await api.post<{ data: { url: string } }>('/auth/oauth/google/start', {
-        redirectTo,
-      })
-      window.location.assign(response.data.url)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Google login failed. Please try again.')
-      setIsLoading(false)
-    }
-  }
-
-  async function handleManualLogin(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
+    setFieldErrors({})
     setIsLoading(true)
 
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+    const name = formData.get('name') as string
+
     try {
-      const response = await api.post<AuthResponse>('/auth/login', {
-        email: email.trim(),
+      if (!isLogin) {
+        await api.post('/auth/register', { name, email, password })
+      }
+
+      const response = await api.post<{ data: { accessToken: string; user: any } }>('/auth/login', {
+        email,
         password,
       })
+      
       localStorage.setItem('access_token', response.data.accessToken)
       localStorage.setItem('user', JSON.stringify(response.data.user))
-      navigateByRole(response.data.user.role)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please check your credentials.')
+      
+      // Redirect based on role
+      const role = response.data.user.role
+      if (role === 'admin') navigate('/admin/dashboard')
+      else if (role === 'authority') navigate('/authority/dashboard')
+      else navigate('/')
+    } catch (err: any) {
+      if (err instanceof ApiError && err.status === 422 && err.details?.fieldErrors) {
+        setFieldErrors(err.details.fieldErrors)
+        setError('Validation failed. Please check the highlighted fields.')
+      } else {
+        setError(err.message || `Failed to ${isLogin ? 'sign in' : 'register'}`)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -141,68 +84,104 @@ export function AuthPage() {
         <div className="auth-card">
           <div>
             <h2 style={{ fontSize: '1.75rem', marginBottom: 'var(--space-1)' }}>
-              Welcome Back
+              {isLogin ? 'Sign in' : 'Create an account'}
             </h2>
             <p style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>
-              Sign in with your university credentials to access your dashboard.
+              {isLogin ? 'Access your dashboard and manage reports.' : 'Join the CampusResolve community today.'}
             </p>
           </div>
 
-          <div className="stack-md" style={{ marginTop: 'var(--space-4)' }}>
+          {isLogin && (
+            <>
+              <Button variant="secondary" style={{ width: '100%', justifyContent: 'center' }}>
+                <span className="material-symbols-outlined icon">school</span>
+                Sign in with Campus Email
+              </Button>
+
+              <div className="divider">
+                <div className="divider__line"></div>
+                <span className="divider__text">or continue with email</span>
+                <div className="divider__line"></div>
+              </div>
+            </>
+          )}
+
+          <form key={isLogin ? 'login' : 'register'} className="form-stack" onSubmit={handleSubmit}>
             {error && (
-              <div className="error-banner" role="alert" style={{ fontSize: '14px', padding: '12px' }}>
+              <div style={{ color: 'var(--color-error)', fontSize: '14px', background: 'var(--color-error-container)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
                 {error}
               </div>
             )}
 
-            <Button
-              variant="secondary" 
-              style={{ width: '100%', justifyContent: 'center', padding: '12px' }}
-              onClick={handleGoogleLogin}
-              disabled={isLoading}
-            >
-              <span className="material-symbols-outlined icon">school</span>
-              Continue with Google
-            </Button>
+            {!isLogin && (
+              <div className="stack-sm">
+                <TextInput
+                  id="name"
+                  type="text"
+                  name="name"
+                  label="Full Name"
+                  placeholder="John Doe"
+                  autoComplete="name"
+                  required
+                />
+                {fieldErrors.name && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.name.join(', ')}</p>}
+              </div>
+            )}
 
-            <div className="divider">
-              <div className="divider__line"></div>
-              <span className="divider__text">or</span>
-              <div className="divider__line"></div>
-            </div>
-
-            <form className="stack-md" onSubmit={handleManualLogin}>
+            <div className="stack-sm">
               <TextInput
                 id="email"
-                name="email"
                 type="email"
+                name="email"
                 label="Email Address"
                 placeholder="name@campus.edu"
                 autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
                 required
               />
-              <TextInput
+              {fieldErrors.email && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.email.join(', ')}</p>}
+            </div>
+            <div className="stack-sm">
+              <div className="split">
+                <label className="field__label" htmlFor="password">Password</label>
+              </div>
+              <input
+                className="field__input"
                 id="password"
-                name="password"
                 type="password"
-                label="Password"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                name="password"
+                placeholder="••••••••"
+                autoComplete={isLogin ? 'current-password' : 'new-password'}
                 required
+                minLength={8}
               />
-              <Button type="submit" disabled={isLoading} style={{ width: '100%', justifyContent: 'center' }}>
-                {isLoading ? 'Signing in...' : 'Sign in with Email'}
-              </Button>
-            </form>
-          </div>
+              {isLogin && (
+                <div style={{ textAlign: 'right' }}>
+                  <Link to="#" className="inline-link" style={{ fontSize: '14px' }}>Forgot password?</Link>
+                </div>
+              )}
+              {fieldErrors.password && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.password.join(', ')}</p>}
+            </div>
+            
+            <Button type="submit" disabled={isLoading} style={{ width: '100%', justifyContent: 'center', marginTop: 'var(--space-2)' }}>
+              {isLoading ? (isLogin ? 'Signing in...' : 'Creating account...') : (isLogin ? 'Sign In' : 'Sign Up')}
+            </Button>
+          </form>
 
-          <div style={{ textAlign: 'center', marginTop: 'var(--space-4)' }}>
-            <p style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-variant)' }}>
-              By logging in, you agree to the University Acceptable Use Policy.
+          <div style={{ textAlign: 'center', marginTop: 'var(--space-2)' }}>
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-on-surface-variant)' }}>
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}
+              <button 
+                type="button" 
+                onClick={() => {
+                  setIsLogin(!isLogin)
+                  setError(null)
+                  setFieldErrors({})
+                }} 
+                className="inline-link" 
+                style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
+              >
+                {isLogin ? 'Register here' : 'Sign in'}
+              </button>
             </p>
           </div>
         </div>

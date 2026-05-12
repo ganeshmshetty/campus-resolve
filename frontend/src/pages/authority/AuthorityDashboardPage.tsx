@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '../../components/shared/PageHeader'
-import { LoadingState } from '../../components/shared/LoadingState'
 import { StatsGrid } from '../../components/shared/StatsGrid'
 import { Card } from '../../components/ui/Card'
 import { StatusChip } from '../../components/ui/StatusChip'
@@ -47,7 +46,9 @@ export function AuthorityDashboardPage() {
       />
 
       {isLoading ? (
-        <LoadingState count={3} />
+        <Card>
+          <div style={{ textAlign: 'center', padding: 'var(--space-4)' }}>Loading assignments...</div>
+        </Card>
       ) : reports.length === 0 ? (
         <Card>
           <div className="between-row">
