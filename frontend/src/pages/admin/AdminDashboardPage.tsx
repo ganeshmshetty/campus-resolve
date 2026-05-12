@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageHeader } from '../../components/shared/PageHeader'
 import { StatsGrid } from '../../components/shared/StatsGrid'
-import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { api } from '../../utils/api'
 import type { Report } from '../../types/domain'
