@@ -24,7 +24,7 @@ export function LandingPage() {
               </Button>
             </Link>
             <Link to="/auth">
-              <Button variant="secondary">View Public Reports</Button>
+              <Button variant="secondary">Sign In</Button>
             </Link>
           </div>
         </div>

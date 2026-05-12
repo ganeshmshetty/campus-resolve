@@ -106,7 +106,7 @@ export function AuthPage() {
             </>
           )}
 
-          <form className="form-stack" onSubmit={handleSubmit}>
+          <form key={isLogin ? 'login' : 'register'} className="form-stack" onSubmit={handleSubmit}>
             {error && (
               <div style={{ color: 'var(--color-error)', fontSize: '14px', background: 'var(--color-error-container)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
                 {error}
@@ -143,9 +143,6 @@ export function AuthPage() {
             <div className="stack-sm">
               <div className="split">
                 <label className="field__label" htmlFor="password">Password</label>
-                {isLogin && (
-                  <Link to="#" className="inline-link" style={{ fontSize: '14px' }}>Forgot password?</Link>
-                )}
               </div>
               <input
                 className="field__input"
@@ -157,6 +154,11 @@ export function AuthPage() {
                 required
                 minLength={8}
               />
+              {isLogin && (
+                <div style={{ textAlign: 'right' }}>
+                  <Link to="#" className="inline-link" style={{ fontSize: '14px' }}>Forgot password?</Link>
+                </div>
+              )}
               {fieldErrors.password && <p style={{ color: 'var(--color-error)', fontSize: '12px' }}>{fieldErrors.password.join(', ')}</p>}
             </div>
             

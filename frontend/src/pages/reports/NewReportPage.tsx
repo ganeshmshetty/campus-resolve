@@ -57,10 +57,22 @@ export function NewReportPage() {
       longitude: formData.get('longitude') ? Number(formData.get('longitude')) : null,
     }
 
+    let reportId: string;
     try {
       const response = await api.post<{ data: { id: string } }>('/reports', payload)
-      const reportId = response.data.id
+      reportId = response.data.id
+    } catch (err: any) {
+      if (err instanceof ApiError && err.status === 422 && err.details?.fieldErrors) {
+        setFieldErrors(err.details.fieldErrors)
+        setError('Validation failed. Please check the highlighted fields.')
+      } else {
+        setError(err.message || 'Failed to submit report')
+      }
+      setIsLoading(false)
+      return
+    }
 
+    try {
       // Upload images if any
       if (selectedFiles.length > 0) {
         for (const file of selectedFiles) {
@@ -77,17 +89,11 @@ export function NewReportPage() {
           })
         }
       }
-
-      navigate('/user/dashboard')
-    } catch (err: any) {
-      if (err instanceof ApiError && err.status === 422 && err.details?.fieldErrors) {
-        setFieldErrors(err.details.fieldErrors)
-        setError('Validation failed. Please check the highlighted fields.')
-      } else {
-        setError(err.message || 'Failed to submit report')
-      }
+    } catch (err) {
+      console.error('Failed to upload images:', err)
     } finally {
       setIsLoading(false)
+      navigate('/user/dashboard')
     }
   }
 
@@ -179,13 +185,18 @@ export function NewReportPage() {
               </div>
               <div className="two-col">
                 <TextInput id="room" name="room" label="Room Number (Optional)" placeholder="e.g., Room 304" />
-                <div className="field" style={{ justifyContent: 'flex-end' }}>
+                <div className="field" style={{ justifyContent: 'flex-end', flexWrap: 'wrap', gap: '8px' }}>
                   <Button type="button" variant="secondary" style={{ width: '100%' }} onClick={handleDetectGps} disabled={isDetectingGps}>
                     <span className="material-symbols-outlined icon">my_location</span>
-                    {isDetectingGps ? 'Detecting...' : (latitude && longitude ? 'Location Saved' : 'Use Current GPS Location')}
+                    {isDetectingGps ? 'Detecting...' : (latitude && longitude ? 'Update Location' : 'Use Current GPS Location')}
                   </Button>
-                  {gpsError && <p style={{ color: 'var(--color-error)', fontSize: '12px', marginTop: '4px' }}>{gpsError}</p>}
-                  {latitude && longitude && <p style={{ color: 'var(--status-resolved)', fontSize: '12px', marginTop: '4px' }}>Detected: {latitude.toFixed(4)}, {longitude.toFixed(4)}</p>}
+                  {latitude && longitude && (
+                    <Button type="button" variant="ghost" style={{ width: '100%' }} onClick={() => { setLatitude(null); setLongitude(null); setGpsError(null); }}>
+                      Clear Location
+                    </Button>
+                  )}
+                  {gpsError && <p style={{ color: 'var(--color-error)', fontSize: '12px', marginTop: '4px', width: '100%' }}>{gpsError}</p>}
+                  {latitude && longitude && <p style={{ color: 'var(--status-resolved)', fontSize: '12px', marginTop: '4px', width: '100%' }}>Detected: {latitude.toFixed(4)}, {longitude.toFixed(4)}</p>}
                 </div>
               </div>
               

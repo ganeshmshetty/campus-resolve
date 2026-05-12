@@ -52,6 +52,7 @@ export function UserDashboardPage() {
   const [reports, setReports] = useState<Report[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     async function fetchReports() {
@@ -72,7 +73,7 @@ export function UserDashboardPage() {
     total: reports.length,
     open: reports.filter(r => r.status === 'OPEN').length,
     inProgress: reports.filter(r => r.status === 'IN_PROGRESS' || r.status === 'ACKNOWLEDGED').length,
-    resolved: reports.filter(r => r.status === 'RESOLVED' || r.status === 'CLOSED').length,
+    resolved: reports.filter(r => r.status === 'RESOLVED' || r.status === 'CLOSED' || r.status === 'REJECTED').length,
   }
 
   return (
@@ -127,12 +128,14 @@ export function UserDashboardPage() {
           <div className="button-row" style={{ flex: 1, justifyContent: 'flex-end' }}>
             <div className="field" style={{ position: 'relative', width: '100%', maxWidth: '240px' }}>
               <span className="material-symbols-outlined icon" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>search</span>
-              <input className="field__input" style={{ paddingLeft: '40px', paddingBlock: '8px' }} placeholder="Search reports..." />
+              <input 
+                className="field__input" 
+                style={{ paddingLeft: '40px', paddingBlock: '8px' }} 
+                placeholder="Search reports..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-            <Button variant="secondary" size="sm">
-              <span className="material-symbols-outlined icon">filter_list</span>
-              Filter
-            </Button>
           </div>
         </div>
 
@@ -155,7 +158,7 @@ export function UserDashboardPage() {
           </div>
         ) : (
           <div className="stack-md">
-            {reports.map((report) => (
+            {reports.filter(r => r.title.toLowerCase().includes(searchQuery.toLowerCase())).map((report) => (
               <article key={report.id} className="report-article">
                 <div className="report-article__content">
                   <div className="between-row">

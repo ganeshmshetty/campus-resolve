@@ -49,10 +49,21 @@ export function MapPage() {
   }, [])
 
   // Filter reports with valid coordinates
-  const mappedReports = reports.filter(r => r.latitude !== null && r.longitude !== null)
+  const mappedReports = reports.filter(r => r.latitude !== null && r.longitude !== null).map(r => {
+    // Add small deterministic jitter to prevent overlap
+    let hash = 0;
+    for (let i = 0; i < r.id.length; i++) hash = r.id.charCodeAt(i) + ((hash << 5) - hash);
+    const jitterLat = ((hash % 100) - 50) * 0.000001;
+    const jitterLng = (((hash >> 2) % 100) - 50) * 0.000001;
+    return {
+      ...r,
+      latitude: r.latitude! + jitterLat,
+      longitude: r.longitude! + jitterLng
+    }
+  })
 
   const mapCenter = mappedReports.length > 0 
-    ? [mappedReports[0].latitude!, mappedReports[0].longitude!] as [number, number]
+    ? [mappedReports[0].latitude, mappedReports[0].longitude] as [number, number]
     : defaultCenter
 
   return (

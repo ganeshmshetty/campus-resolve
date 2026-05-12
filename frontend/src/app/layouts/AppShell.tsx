@@ -115,10 +115,10 @@ export function AppShell() {
           </NavLink>
         )}
         {user && (
-          <div className="bottom-nav__link" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+          <button className="bottom-nav__link" onClick={handleLogout} style={{ cursor: 'pointer', background: 'none', border: 'none', font: 'inherit', color: 'inherit', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '8px 0' }}>
             <span className="material-symbols-outlined icon" style={{ fontSize: '24px' }}>logout</span>
             <span>Logout</span>
-          </div>
+          </button>
         )}
       </nav>
       

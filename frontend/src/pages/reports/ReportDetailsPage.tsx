@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { PageHeader } from '../../components/shared/PageHeader'
 import { Card } from '../../components/ui/Card'
 import { StatusChip } from '../../components/ui/StatusChip'
+import { Button } from '../../components/ui/Button'
 import { api } from '../../utils/api'
-import type { Report, ReportUpdate, ReportImage } from '../../types/domain'
+import { REPORT_STATUSES } from '../../types/domain'
+import type { Report, ReportUpdate, ReportImage, ReportStatus } from '../../types/domain'
 
 export function ReportDetailsPage() {
   const { reportId } = useParams<{ reportId: string }>()
@@ -12,27 +14,63 @@ export function ReportDetailsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    async function fetchDetails() {
-      if (!reportId) return
-      try {
-        const response = await api.get<{ data: { report: Report; updates: ReportUpdate[]; images: ReportImage[] } }>(`/reports/${reportId}`)
-        setData(response.data)
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch report details')
-      } finally {
-        setIsLoading(false)
-      }
+  const canUpdate = useMemo(() => {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (!userStr || userStr === 'undefined') return false;
+      const user = JSON.parse(userStr);
+      return user && (user.role === 'admin' || user.role === 'authority');
+    } catch {
+      return false;
     }
+  }, []);
+  
+  const [updateNotes, setUpdateNotes] = useState('');
+  const [updateStatus, setUpdateStatus] = useState<ReportStatus | ''>('');
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
+  async function fetchDetails() {
+    if (!reportId) return
+    try {
+      const response = await api.get<{ data: { report: Report; updates: ReportUpdate[]; images: ReportImage[] } }>(`/reports/${reportId}`)
+      setData(response.data)
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch report details')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
     fetchDetails()
   }, [reportId])
+
+  async function handleUpdate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!updateNotes.trim()) return;
+    setIsUpdating(true);
+    setUpdateError(null);
+    try {
+      const payload: any = { notes: updateNotes };
+      if (updateStatus) payload.status = updateStatus;
+      await api.post(`/reports/${reportId}/updates`, payload);
+      await fetchDetails();
+      setUpdateNotes('');
+      setUpdateStatus('');
+    } catch (err: any) {
+      console.error(err);
+      setUpdateError(err.message || 'Failed to post update. Please try again.');
+    } finally {
+      setIsUpdating(false);
+    }
+  }
 
   if (isLoading) return <div style={{ textAlign: 'center', padding: 'var(--space-7)' }}>Loading details...</div>
   if (error || !data) return (
     <div className="card" style={{ textAlign: 'center', padding: 'var(--space-7)' }}>
       <p style={{ color: 'var(--color-error)' }}>{error || 'Report not found'}</p>
-      <Link to="/user/dashboard" style={{ marginTop: 'var(--space-4)', display: 'inline-block' }}>
+      <Link to="/" style={{ marginTop: 'var(--space-4)', display: 'inline-block' }}>
         <StatusChip status="OPEN" style={{ background: 'var(--color-primary)', color: 'white' }}>Back to dashboard</StatusChip>
       </Link>
     </div>
@@ -97,6 +135,48 @@ export function ReportDetailsPage() {
                 </li>
               ))}
             </ol>
+          )}
+
+          {canUpdate && (
+            <div style={{ marginTop: 'var(--space-4)', borderTop: '1px solid var(--color-outline-variant)', paddingTop: 'var(--space-4)' }}>
+              <h3>Post an Update</h3>
+              {updateError && (
+                <div style={{ color: 'var(--color-error)', padding: 'var(--space-2)', marginBottom: 'var(--space-2)', background: 'var(--color-error-container)', borderRadius: 'var(--radius-md)' }}>
+                  {updateError}
+                </div>
+              )}
+              <form onSubmit={handleUpdate} className="stack-sm" style={{ marginTop: '8px' }}>
+                <div className="field">
+                  <label className="field__label" htmlFor="status">Change Status (Optional)</label>
+                  <select 
+                    id="status" 
+                    className="field__input" 
+                    value={updateStatus} 
+                    onChange={e => setUpdateStatus(e.target.value as ReportStatus)}
+                  >
+                    <option value="">-- Keep current status --</option>
+                    {REPORT_STATUSES.map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="field">
+                  <label className="field__label" htmlFor="notes">Notes</label>
+                  <textarea 
+                    id="notes" 
+                    className="field__textarea" 
+                    rows={3} 
+                    placeholder="Enter update details or resolution notes"
+                    value={updateNotes}
+                    onChange={e => setUpdateNotes(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button type="submit" disabled={isUpdating || !updateNotes.trim()}>
+                  {isUpdating ? 'Posting...' : 'Post Update'}
+                </Button>
+              </form>
+            </div>
           )}
         </Card>
       </div>

@@ -336,7 +336,7 @@ function addImageMock({ reportId, uploadedBy, imageType, file }: AddImageInput) 
     report_id: reportId,
     uploaded_by: uploadedBy,
     image_path: `mock/reports/${reportId}/${Date.now()}-${sanitizeFilename(file.originalname)}`,
-    image_url: `mock://reports/${reportId}/${file.originalname}`,
+    image_url: `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
     image_type: imageType,
     created_at: new Date().toISOString(),
   }
