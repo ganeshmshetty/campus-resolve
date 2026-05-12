@@ -24,6 +24,8 @@ const upload = multer({
 
 reportsRouter.post('/', requireAuth, authorize('user', 'admin'), validate(createReportSchema), reportsController.create)
 
+reportsRouter.get('/public', reportsController.listPublic)
+
 reportsRouter.get('/', requireAuth, reportsController.list)
 
 reportsRouter.get('/:id', requireAuth, validate(reportIdParamsSchema, 'params'), reportsController.getById)

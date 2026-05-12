@@ -37,6 +37,11 @@ export const reportsController = {
     res.json({ data })
   }),
 
+  listPublic: asyncHandler(async (_req: Request, res: Response) => {
+    const data = await reportsService.listPublicReports()
+    res.json({ data })
+  }),
+
   getById: asyncHandler(async (req: Request, res: Response) => {
     const user = getAuthenticatedUser(req)
     const data = await reportsService.getReportById(user, getReportId(req))

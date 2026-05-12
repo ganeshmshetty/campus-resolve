@@ -2,6 +2,18 @@ import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 
 export function LandingPage() {
+  const userStr = localStorage.getItem('user');
+  let user = null;
+
+  if (userStr && userStr !== 'undefined') {
+    try {
+      user = JSON.parse(userStr);
+    } catch (err) {
+      console.error('Failed to parse user from localStorage', err);
+      localStorage.removeItem('user');
+    }
+  }
+
   return (
     <div className="stack-lg">
       <section className="hero">
@@ -23,9 +35,15 @@ export function LandingPage() {
                 Report an Issue
               </Button>
             </Link>
-            <Link to="/auth">
-              <Button variant="secondary">Sign In</Button>
-            </Link>
+            {user ? (
+              <Link to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'authority' ? '/authority/dashboard' : '/user/dashboard'}>
+                <Button variant="secondary">Go to Dashboard</Button>
+              </Link>
+            ) : (
+              <Link to="/auth">
+                <Button variant="secondary">Sign In</Button>
+              </Link>
+            )}
           </div>
         </div>
         <div className="hero__image-container">

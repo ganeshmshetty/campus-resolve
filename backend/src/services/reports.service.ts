@@ -148,6 +148,21 @@ function listReportsMock(user: AuthUser) {
   return mockReports.filter((report) => report.created_by === user.id)
 }
 
+async function listPublicReportsSupabase() {
+  const client = getAdminSupabaseClient()
+  const { data, error } = await client.from('reports').select('*').order('created_at', { ascending: false })
+
+  if (error) {
+    throw new HttpError(HTTP_STATUS.badRequest, error.message)
+  }
+
+  return (data ?? []) as ReportRecord[]
+}
+
+function listPublicReportsMock() {
+  return mockReports
+}
+
 async function getReportDetailsSupabase(user: AuthUser, reportId: string) {
   const client = getAdminSupabaseClient()
 
@@ -419,6 +434,14 @@ export const reportsService = {
     }
 
     return listReportsMock(user)
+  },
+
+  async listPublicReports() {
+    if (isSupabaseConfigured) {
+      return listPublicReportsSupabase()
+    }
+
+    return listPublicReportsMock()
   },
 
   async getReportById(user: AuthUser, reportId: string) {

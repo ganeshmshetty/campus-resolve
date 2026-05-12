@@ -9,6 +9,7 @@ import { MapPage } from '../pages/MapPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { NewReportPage } from '../pages/reports/NewReportPage'
 import { ReportDetailsPage } from '../pages/reports/ReportDetailsPage'
+import { ReportsFeedPage } from '../pages/reports/ReportsFeedPage'
 import { UserDashboardPage } from '../pages/user/UserDashboardPage'
 
 function ProtectedRoute({ allowedRoles }: { allowedRoles?: string[] }) {
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
       { index: true, element: <LandingPage /> },
       { path: 'auth', element: <AuthPage /> },
       { path: 'map', element: <MapPage /> },
+      { path: 'reports', element: <ReportsFeedPage /> },
       {
         element: <ProtectedRoute />,
         children: [
