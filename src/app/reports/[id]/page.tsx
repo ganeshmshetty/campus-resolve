@@ -122,7 +122,7 @@ export default async function ReportDetailsPage({
             <div className="grid gap-4 sm:grid-cols-2 mb-6">
               {report.report_images.map((img: any, idx: number) => (
                 <div key={idx} className="w-full h-64 overflow-hidden rounded-xl border border-border/50">
-                  <img src={img.image_url} alt="Report issue" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                  <img src={img.image_url} alt="Report issue" className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500" />
                 </div>
               ))}
             </div>

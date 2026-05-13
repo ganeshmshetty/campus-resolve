@@ -181,7 +181,7 @@ export default async function DashboardPage() {
                         </div>
                         {report.report_images?.[0]?.image_url && (
                           <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden border border-border/50">
-                            <img src={report.report_images[0].image_url} alt="" className="w-full h-full object-cover" />
+                            <img src={report.report_images[0].image_url} alt="" className="w-full h-full object-cover object-top" />
                           </div>
                         )}
                       </div>

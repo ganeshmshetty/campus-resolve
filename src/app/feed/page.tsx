@@ -168,7 +168,7 @@ export default async function FeedPage() {
                           </div>
                           {report.report_images?.[0]?.image_url && (
                             <div className="shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
-                              <img src={report.report_images[0].image_url} alt="Report issue" className="w-full h-full object-cover" />
+                              <img src={report.report_images[0].image_url} alt="Report issue" className="w-full h-full object-cover object-top" />
                             </div>
                           )}
                         </div>
