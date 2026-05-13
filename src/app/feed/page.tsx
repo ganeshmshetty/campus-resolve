@@ -123,62 +123,59 @@ export default async function FeedPage() {
                       key={report.id}
                       className="group gap-0 overflow-hidden border-border/40 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 transition-all duration-300 rounded-2xl bg-background"
                     >
-                      <CardContent className="pt-4 pb-4">
-                        <div className="flex flex-col gap-4">
-                          <div className="flex justify-between items-start gap-4">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <StatusBadge status={report.status} />
-                                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 before:content-[''] before:w-1 before:h-1 before:bg-muted-foreground/40 before:rounded-full">
-                                  {report.category}
-                                </span>
-                              </div>
-                              <CardTitle className="text-xl font-bold tracking-tight">
-                                {report.title}
-                              </CardTitle>
-                            </div>
-                            <div className="shrink-0 flex flex-col items-end gap-3">
-                              <span className="text-xs text-muted-foreground font-medium">
-                                {formatDistanceToNow(
-                                  new Date(report.created_at),
-                                  {
-                                    addSuffix: true,
-                                  }
-                                )}
+                      <CardHeader className="pb-4 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
+                        <div className="min-w-0 flex flex-col gap-3">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <StatusBadge status={report.status} />
+                              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 before:content-[''] before:w-1 before:h-1 before:bg-muted-foreground/40 before:rounded-full">
+                                {report.category}
                               </span>
-                              {report.report_images?.[0]?.image_url && (
-                                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
-                                  <img
-                                    src={report.report_images[0].image_url}
-                                    alt="Report issue"
-                                    className="w-full h-full object-cover object-top"
-                                  />
-                                </div>
-                              )}
                             </div>
+                            <CardTitle className="text-xl font-bold tracking-tight">
+                              {report.title}
+                            </CardTitle>
                           </div>
-                          <div className="min-w-0 flex-1 flex flex-col gap-3">
-                            <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                              {report.description}
-                            </p>
-                            <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-foreground/70">
-                              <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
-                                <MapPin className="h-4 w-4 text-primary" />
-                                <span className="line-clamp-1">{report.address}</span>
+                          <CardContent className="px-0 pt-0 pb-0">
+                            <div className="min-w-0 flex-1 flex flex-col gap-3">
+                              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                {report.description}
+                              </p>
+                              <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-foreground/70">
+                                <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
+                                  <MapPin className="h-4 w-4 text-primary" />
+                                  <span className="line-clamp-1">{report.address}</span>
+                                </div>
+                                {report.profiles?.name && (
+                                  <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+                                    <span className="w-1 h-1 rounded-full bg-border"></span>
+                                    Reported by{" "}
+                                    <span className="text-foreground font-semibold">
+                                      {report.profiles.name}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
-                              {report.profiles?.name && (
-                                <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-                                  <span className="w-1 h-1 rounded-full bg-border"></span>
-                                  Reported by{" "}
-                                  <span className="text-foreground font-semibold">
-                                    {report.profiles.name}
-                                  </span>
-                                </div>
-                              )}
                             </div>
-                          </div>
+                          </CardContent>
                         </div>
-                      </CardContent>
+                        <div className="shrink-0 flex flex-col items-end gap-3">
+                          <span className="text-xs text-muted-foreground font-medium">
+                            {formatDistanceToNow(new Date(report.created_at), {
+                              addSuffix: true,
+                            })}
+                          </span>
+                          {report.report_images?.[0]?.image_url && (
+                            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
+                              <img
+                                src={report.report_images[0].image_url}
+                                alt="Report issue"
+                                className="w-full h-full object-cover object-top"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </CardHeader>
 
                       <CardFooter className="pt-4 border-t border-border/40 flex flex-col gap-3 bg-muted/5 items-stretch">
                         <div className="flex justify-between items-center">
