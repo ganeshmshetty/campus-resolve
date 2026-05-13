@@ -42,3 +42,4 @@ backend/node_modules/
 backend/dist/
 backend/dist-server/
 
+.vercel
