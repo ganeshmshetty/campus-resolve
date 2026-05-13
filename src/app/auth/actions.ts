@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient, createAdminClient } from "@/utils/supabase/server";
 import { actionClient } from "@/lib/safe-action";
 import { z } from "zod";
 import { redirect } from "next/navigation";
@@ -38,19 +38,36 @@ export const registerAction = actionClient
   .action(async ({ parsedInput: { name, email, password } }) => {
     const supabase = await createClient();
 
-    const { error } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           name,
-          role: "user", // Default role
+          role: "user",
         },
       },
     });
 
-    if (error) {
-      return { error: error.message };
+    if (authError) {
+      return { error: authError.message };
+    }
+
+    if (authData.user) {
+      // Create profile record using admin client to bypass RLS and ensure creation
+      const adminSupabase = await createAdminClient();
+      const { error: profileError } = await adminSupabase.from("profiles").insert({
+        id: authData.user.id,
+        name,
+        email,
+        role: "user",
+      });
+
+      if (profileError) {
+        console.error("Profile creation error:", profileError);
+        // We don't return error here because the user is already created in Auth
+        // and might just need a profile fixup later, or we could handle it differently.
+      }
     }
 
     return { success: true };
