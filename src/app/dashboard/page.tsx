@@ -166,7 +166,7 @@ export default async function DashboardPage() {
                           {formatDistanceToNow(new Date(report.created_at), { addSuffix: true })}
                         </span>
                       </div>
-                      <div className="flex gap-4 flex-1">
+                      <div className="flex gap-4 items-start flex-1">
                         <div className="flex-1 min-w-0 flex flex-col h-full">
                           <CardTitle className="text-sm font-bold line-clamp-1 group-hover:text-primary transition-colors mb-1">
                             {report.title}
@@ -180,7 +180,7 @@ export default async function DashboardPage() {
                           </div>
                         </div>
                         {report.report_images?.[0]?.image_url && (
-                          <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden border border-border/50 self-start">
+                          <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden border border-border/50">
                             <img src={report.report_images[0].image_url} alt="" className="w-full h-full object-cover" />
                           </div>
                         )}
