@@ -155,7 +155,7 @@ export default async function FeedPage() {
                         </div>
                       </CardHeader>
 
-                      <CardContent className="pt-1 pb-4">
+                      <CardContent className="pt-1 pb-4 sm:-mt-12 sm:pt-0">
                         <div className="flex flex-col gap-4">
                           <div className="min-w-0 flex-1 flex flex-col gap-3">
                             <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
