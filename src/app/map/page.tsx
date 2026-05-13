@@ -1,21 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { DashboardNav } from "@/components/layout/nav";
-import { MapPin, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import dynamic from "next/dynamic";
-
-// Dynamically import the client-side map component to avoid SSR issues
-const CampusMap = dynamic(() => import("@/components/map/CampusMap"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[600px] bg-muted animate-pulse rounded-2xl flex items-center justify-center">
-      <div className="flex flex-col items-center gap-2">
-        <MapPin className="h-8 w-8 text-muted-foreground animate-bounce" />
-        <p className="text-muted-foreground font-medium">Loading RVCE Map...</p>
-      </div>
-    </div>
-  ),
-});
+import CampusMapWrapper from "@/components/map/CampusMapWrapper";
 
 export default async function MapPage() {
   const supabase = await createClient();
@@ -55,7 +42,7 @@ export default async function MapPage() {
         </div>
 
         <div className="rounded-3xl overflow-hidden border-4 border-background shadow-2xl bg-background h-[650px] relative">
-          <CampusMap reports={reports || []} />
+          <CampusMapWrapper reports={reports || []} />
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">

@@ -17,7 +17,7 @@ CampusResolve is a production-grade civic reporting portal designed for campus e
 ## Building and Running
 - `npm install`: Install project dependencies.
 - `npm run dev`: Launch the development server (available at `http://localhost:3000`).
-- `npm run build`: Create a production-optimized build.
+- `npm run build`: Create a production-optimized build. **Always test the build locally using this command before pushing or deploying to Vercel to catch compile-time errors.**
 - `npm run start`: Run the production server.
 - `npm run lint`: Execute ESLint for code quality checks.
 
