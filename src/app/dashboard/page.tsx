@@ -50,19 +50,19 @@ export default async function DashboardPage() {
   let stats = null;
 
   if (role === "admin") {
-    const { data: allReports } = await supabase.from("reports").select("*").order("created_at", { ascending: false });
+    const { data: allReports } = await supabase.from("reports").select("*, report_images(image_url)").order("created_at", { ascending: false });
     reports = allReports || [];
     // Basic stats for admin
     stats = {
       total: reports.length,
-      open: reports.filter(r => r.status === "OPEN").length,
-      resolved: reports.filter(r => r.status === "RESOLVED").length,
+      open: reports.filter((r: any) => r.status === "OPEN").length,
+      resolved: reports.filter((r: any) => r.status === "RESOLVED").length,
     };
   } else if (role === "authority") {
-    const { data: assignedReports } = await supabase.from("reports").select("*").eq("assigned_to", user?.id).order("created_at", { ascending: false });
+    const { data: assignedReports } = await supabase.from("reports").select("*, report_images(image_url)").eq("assigned_to", user?.id).order("created_at", { ascending: false });
     reports = assignedReports || [];
   } else {
-    const { data: userReports } = await supabase.from("reports").select("*").eq("created_by", user?.id).order("created_at", { ascending: false });
+    const { data: userReports } = await supabase.from("reports").select("*, report_images(image_url)").eq("created_by", user?.id).order("created_at", { ascending: false });
     reports = userReports || [];
   }
 
@@ -159,27 +159,32 @@ export default async function DashboardPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 {reports.slice(0, 6).map((report) => (
                   <Link key={report.id} href={`/reports/${report.id}`}>
-                    <Card className="h-full hover:border-primary/50 transition-all hover:shadow-md shadow-sm cursor-pointer group">
-                      <CardHeader className="pb-2 p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <StatusBadge status={report.status} />
-                          <span className="text-[10px] text-muted-foreground">
-                            {formatDistanceToNow(new Date(report.created_at), { addSuffix: true })}
-                          </span>
+                    <Card className="h-full hover:-translate-y-1 hover:border-primary/50 transition-all hover:shadow-md shadow-sm cursor-pointer group flex flex-col p-4 gap-3 bg-background">
+                      <div className="flex justify-between items-start">
+                        <StatusBadge status={report.status} />
+                        <span className="text-[10px] text-muted-foreground shrink-0 ml-2">
+                          {formatDistanceToNow(new Date(report.created_at), { addSuffix: true })}
+                        </span>
+                      </div>
+                      <div className="flex gap-4 items-start flex-1">
+                        <div className="flex-1 min-w-0 flex flex-col h-full">
+                          <CardTitle className="text-sm font-bold line-clamp-1 group-hover:text-primary transition-colors mb-1">
+                            {report.title}
+                          </CardTitle>
+                          <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+                            {report.description}
+                          </p>
+                          <div className="flex items-center text-[10px] text-muted-foreground mt-auto">
+                            <MapPin className="h-3 w-3 mr-1 shrink-0" />
+                            <span className="line-clamp-1">{report.address}</span>
+                          </div>
                         </div>
-                        <CardTitle className="text-sm font-bold line-clamp-1 group-hover:text-primary transition-colors">
-                          {report.title}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 pt-0">
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
-                          {report.description}
-                        </p>
-                        <div className="flex items-center text-[10px] text-muted-foreground">
-                          <MapPin className="h-3 w-3 mr-1 shrink-0" />
-                          <span className="line-clamp-1">{report.address}</span>
-                        </div>
-                      </CardContent>
+                        {report.report_images?.[0]?.image_url && (
+                          <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden border border-border/50">
+                            <img src={report.report_images[0].image_url} alt="" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
                     </Card>
                   </Link>
                 ))}

@@ -44,7 +44,7 @@ export default async function FeedPage() {
   // Fetch all reports with author profiles
   const { data: reports, error } = await supabase
     .from("reports")
-    .select("*, profiles!reports_created_by_fkey(name)")
+    .select("*, profiles!reports_created_by_fkey(name), report_images(image_url)")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -145,6 +145,11 @@ export default async function FeedPage() {
                       </CardHeader>
 
                       <CardContent className="pb-4">
+                        {report.report_images?.[0]?.image_url && (
+                          <div className="w-full h-48 mb-4 overflow-hidden rounded-xl border border-border/50">
+                            <img src={report.report_images[0].image_url} alt="Report issue" className="w-full h-full object-cover" />
+                          </div>
+                        )}
                         <p className="text-muted-foreground leading-relaxed mb-4">
                           {report.description}
                         </p>

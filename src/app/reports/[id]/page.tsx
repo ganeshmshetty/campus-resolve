@@ -29,7 +29,7 @@ export default async function ReportDetailsPage({
   // Fetch the report
   const { data: report, error } = await supabase
     .from("reports")
-    .select("*, profiles!reports_created_by_fkey(name)")
+    .select("*, profiles!reports_created_by_fkey(name), report_images(image_url)")
     .eq("id", resolvedParams.id)
     .single();
 
@@ -118,7 +118,16 @@ export default async function ReportDetailsPage({
           <CardTitle>Description</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="whitespace-pre-wrap">{report.description}</p>
+          {report.report_images && report.report_images.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 mb-6">
+              {report.report_images.map((img: any, idx: number) => (
+                <div key={idx} className="w-full h-64 overflow-hidden rounded-xl border border-border/50">
+                  <img src={img.image_url} alt="Report issue" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                </div>
+              ))}
+            </div>
+          )}
+          <p className="whitespace-pre-wrap leading-relaxed">{report.description}</p>
         </CardContent>
       </Card>
 
