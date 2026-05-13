@@ -124,7 +124,7 @@ export default async function FeedPage() {
                       className="group gap-0 overflow-hidden border-border/40 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 transition-all duration-300 rounded-2xl bg-background"
                     >
                       <CardHeader className="pb-1">
-                        <div className="flex justify-between items-start">
+                        <div className="flex justify-between items-start gap-4">
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 mb-2">
                               <StatusBadge status={report.status} />
@@ -136,16 +136,27 @@ export default async function FeedPage() {
                               {report.title}
                             </CardTitle>
                           </div>
-                          <span className="text-xs text-muted-foreground font-medium shrink-0">
-                            {formatDistanceToNow(new Date(report.created_at), {
-                              addSuffix: true,
-                            })}
-                          </span>
+                          <div className="shrink-0 flex flex-col items-end gap-3">
+                            <span className="text-xs text-muted-foreground font-medium">
+                              {formatDistanceToNow(new Date(report.created_at), {
+                                addSuffix: true,
+                              })}
+                            </span>
+                            {report.report_images?.[0]?.image_url && (
+                              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
+                                <img
+                                  src={report.report_images[0].image_url}
+                                  alt="Report issue"
+                                  className="w-full h-full object-cover object-top"
+                                />
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </CardHeader>
 
                       <CardContent className="pt-1 pb-4">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+                        <div className="flex flex-col gap-4">
                           <div className="min-w-0 flex-1 flex flex-col gap-3">
                             <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                               {report.description}
@@ -166,11 +177,6 @@ export default async function FeedPage() {
                               )}
                             </div>
                           </div>
-                          {report.report_images?.[0]?.image_url && (
-                            <div className="shrink-0 sm:-mt-2 w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
-                              <img src={report.report_images[0].image_url} alt="Report issue" className="w-full h-full object-cover object-top" />
-                            </div>
-                          )}
                         </div>
                       </CardContent>
 
