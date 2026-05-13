@@ -123,7 +123,7 @@ export default async function FeedPage() {
                       key={report.id}
                       className="group gap-0 overflow-hidden border-border/40 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 transition-all duration-300 rounded-2xl bg-background"
                     >
-                      <CardHeader className="pb-1">
+                      <CardHeader className="pb-0">
                         <div className="flex justify-between items-start gap-4">
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 mb-2">
@@ -155,7 +155,7 @@ export default async function FeedPage() {
                         </div>
                       </CardHeader>
 
-                      <CardContent className="pt-1 pb-4 sm:-mt-12 sm:pt-0">
+                      <CardContent className="pt-2 pb-4">
                         <div className="flex flex-col gap-4">
                           <div className="min-w-0 flex-1 flex flex-col gap-3">
                             <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
