@@ -145,14 +145,16 @@ export default async function FeedPage() {
                       </CardHeader>
 
                       <CardContent className="pb-4">
-                        {report.report_images?.[0]?.image_url && (
-                          <div className="w-full h-48 mb-4 overflow-hidden rounded-xl border border-border/50">
-                            <img src={report.report_images[0].image_url} alt="Report issue" className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                        <p className="text-muted-foreground leading-relaxed mb-4">
-                          {report.description}
-                        </p>
+                        <div className="flex gap-4 items-start mb-4">
+                          <p className="text-muted-foreground leading-relaxed flex-1 min-w-0 whitespace-pre-wrap">
+                            {report.description}
+                          </p>
+                          {report.report_images?.[0]?.image_url && (
+                            <div className="shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
+                              <img src={report.report_images[0].image_url} alt="Report issue" className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                        </div>
                         <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-foreground/70">
                           <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
                             <MapPin className="h-4 w-4 text-primary" />
