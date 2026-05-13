@@ -145,8 +145,8 @@ export default async function FeedPage() {
                       </CardHeader>
 
                       <CardContent className="pb-4">
-                        <div className="flex gap-4 items-start">
-                          <div className="flex-1 min-w-0 flex flex-col gap-3">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                          <div className="min-w-0 flex-1 flex flex-col gap-3">
                             <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                               {report.description}
                             </p>
