@@ -33,7 +33,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MapPin, Camera, AlertCircle } from "lucide-react";
+import { MapPin, Camera, AlertCircle, Loader2 } from "lucide-react";
+import LocationPickerWrapper from "@/components/map/LocationPickerWrapper";
+import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 const reportSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -49,10 +52,16 @@ const reportSchema = z.object({
     "other",
   ]),
   address: z.string().min(5, "Address is required"),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
 });
 
 export default function NewReportPage() {
   const router = useRouter();
+  const supabase = createClient();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof reportSchema>>({
     resolver: zodResolver(reportSchema),
@@ -71,6 +80,7 @@ export default function NewReportPage() {
       } else if (data?.success) {
         toast.success("Report submitted successfully!");
         router.push("/dashboard");
+        router.refresh();
       }
     },
     onError: () => {
@@ -78,12 +88,46 @@ export default function NewReportPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof reportSchema>) {
-    execute(values);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image must be smaller than 5MB");
+        return;
+      }
+      setImageFile(file);
+      const url = URL.createObjectURL(file);
+      setImagePreview(url);
+    }
+  };
+
+  async function onSubmit(values: z.infer<typeof reportSchema>) {
+    let imagePath: string | undefined;
+
+    if (imageFile) {
+      setIsUploading(true);
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `reports/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('report-images')
+        .upload(filePath, imageFile);
+
+      setIsUploading(false);
+
+      if (uploadError) {
+        toast.error("Failed to upload image.");
+        return;
+      }
+      imagePath = filePath;
+    }
+
+    execute({ ...values, imagePath });
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold font-heading tracking-tight">
           Report an Issue
@@ -105,7 +149,7 @@ export default function NewReportPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="grid gap-6 sm:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -188,11 +232,46 @@ export default function NewReportPage() {
                 />
               </div>
 
-              {/* Placeholder for future Map integration */}
-              <div className="rounded-lg border border-dashed border-border/60 bg-muted/30 p-8 text-center flex flex-col items-center justify-center text-muted-foreground mt-4">
-                <MapPin className="h-8 w-8 mb-2 opacity-50" />
-                <p className="font-medium text-sm">Interactive Map (Coming soon)</p>
-                <p className="text-xs">You'll be able to drop a pin to provide exact GPS coordinates.</p>
+              <div className="space-y-4">
+                <div>
+                    <h3 className="text-sm font-medium mb-1">Upload Photo (Optional)</h3>
+                    <p className="text-xs text-muted-foreground mb-3">A clear photo helps authorities understand the severity of the issue.</p>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                    <label className="cursor-pointer">
+                        <div className="flex items-center gap-2 px-4 py-2 border border-border rounded-md hover:bg-muted/50 transition-colors">
+                            <Camera className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm font-medium">Choose File</span>
+                        </div>
+                        <input 
+                            type="file" 
+                            accept="image/png, image/jpeg, image/jpg, image/webp" 
+                            className="hidden" 
+                            onChange={handleImageChange}
+                        />
+                    </label>
+                    {imagePreview && (
+                        <div className="relative w-16 h-16 rounded-md overflow-hidden border border-border">
+                            <img src={imagePreview} alt="Preview" className="object-cover w-full h-full" />
+                        </div>
+                    )}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                 <div>
+                    <h3 className="text-sm font-medium mb-1">Pin Location (Optional)</h3>
+                    <p className="text-xs text-muted-foreground mb-3">Drop a pin on the map to provide exact coordinates.</p>
+                </div>
+                <div className="h-[300px] sm:h-[400px] w-full">
+                  <LocationPickerWrapper 
+                    onLocationSelect={(lat, lng) => {
+                      form.setValue("latitude", lat);
+                      form.setValue("longitude", lng);
+                    }} 
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end gap-4 pt-4 border-t border-border/40 mt-6">
@@ -200,12 +279,17 @@ export default function NewReportPage() {
                   type="button" 
                   variant="outline" 
                   onClick={() => router.back()}
-                  disabled={isExecuting}
+                  disabled={isExecuting || isUploading}
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isExecuting} className="px-8 font-medium">
-                  {isExecuting ? "Submitting..." : "Submit Report"}
+                <Button type="submit" disabled={isExecuting || isUploading} className="px-8 font-medium">
+                  {isExecuting || isUploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {isUploading ? "Uploading Image..." : "Submitting..."}
+                    </>
+                  ) : "Submit Report"}
                 </Button>
               </div>
             </form>

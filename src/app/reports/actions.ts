@@ -19,12 +19,14 @@ const reportSchema = z.object({
     "other",
   ]),
   address: z.string().min(5, "Address is required"),
-  // GPS optional for now
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  imagePath: z.string().optional(),
 });
 
 export const createReportAction = actionClient
   .schema(reportSchema)
-  .action(async ({ parsedInput: { title, description, category, address } }) => {
+  .action(async ({ parsedInput: { title, description, category, address, latitude, longitude, imagePath } }) => {
     const supabase = await createClient();
 
     const {
@@ -42,6 +44,8 @@ export const createReportAction = actionClient
         description,
         category,
         address,
+        latitude,
+        longitude,
         status: "OPEN",
         created_by: user.id,
       })
@@ -52,8 +56,22 @@ export const createReportAction = actionClient
       return { error: error.message };
     }
 
+    if (imagePath && data) {
+      const { error: imageError } = await supabase.from("report_images").insert({
+        report_id: data.id,
+        uploaded_by: user.id,
+        image_path: imagePath,
+        image_type: "ISSUE",
+      });
+      if (imageError) {
+        console.error("Failed to insert image record:", imageError);
+      }
+    }
+
     revalidatePath("/dashboard");
     revalidatePath("/reports");
+    revalidatePath("/map");
+    revalidatePath("/feed");
 
     return { success: true, reportId: data.id };
   });
