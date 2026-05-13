@@ -1,23 +1,44 @@
-.DS_Store
-**/.DS_Store
 node_modules/
 dist/
 build/
+.next/
+.turbo/
+out/
 coverage/
+
+# Environment
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .env.*
 !.env.example
+
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# System
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# IDEs
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+.idea/
+
+# Workspace specific (redundant but safe)
 frontend/node_modules/
 frontend/dist/
 backend/node_modules/
 backend/dist/
+backend/dist-server/
+
