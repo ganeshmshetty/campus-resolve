@@ -123,40 +123,40 @@ export default async function FeedPage() {
                       key={report.id}
                       className="group gap-0 overflow-hidden border-border/40 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 transition-all duration-300 rounded-2xl bg-background"
                     >
-                      <CardHeader className="pb-0">
-                        <div className="flex justify-between items-start gap-4">
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <StatusBadge status={report.status} />
-                              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 before:content-[''] before:w-1 before:h-1 before:bg-muted-foreground/40 before:rounded-full">
-                                {report.category}
-                              </span>
-                            </div>
-                            <CardTitle className="text-xl font-bold tracking-tight">
-                              {report.title}
-                            </CardTitle>
-                          </div>
-                          <div className="shrink-0 flex flex-col items-end gap-3">
-                            <span className="text-xs text-muted-foreground font-medium">
-                              {formatDistanceToNow(new Date(report.created_at), {
-                                addSuffix: true,
-                              })}
-                            </span>
-                            {report.report_images?.[0]?.image_url && (
-                              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
-                                <img
-                                  src={report.report_images[0].image_url}
-                                  alt="Report issue"
-                                  className="w-full h-full object-cover object-top"
-                                />
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardHeader>
-
-                      <CardContent className="pt-2 pb-4">
+                      <CardContent className="pt-4 pb-4">
                         <div className="flex flex-col gap-4">
+                          <div className="flex justify-between items-start gap-4">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <StatusBadge status={report.status} />
+                                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 before:content-[''] before:w-1 before:h-1 before:bg-muted-foreground/40 before:rounded-full">
+                                  {report.category}
+                                </span>
+                              </div>
+                              <CardTitle className="text-xl font-bold tracking-tight">
+                                {report.title}
+                              </CardTitle>
+                            </div>
+                            <div className="shrink-0 flex flex-col items-end gap-3">
+                              <span className="text-xs text-muted-foreground font-medium">
+                                {formatDistanceToNow(
+                                  new Date(report.created_at),
+                                  {
+                                    addSuffix: true,
+                                  }
+                                )}
+                              </span>
+                              {report.report_images?.[0]?.image_url && (
+                                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
+                                  <img
+                                    src={report.report_images[0].image_url}
+                                    alt="Report issue"
+                                    className="w-full h-full object-cover object-top"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </div>
                           <div className="min-w-0 flex-1 flex flex-col gap-3">
                             <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                               {report.description}
