@@ -45,6 +45,7 @@ export default function CampusMap({ reports, interactive = true }: CampusMapProp
         boxZoom={interactive}
         doubleClickZoom={interactive}
         touchZoomRotate={interactive}
+        attributionControl={false}
       >
         {interactive && <NavigationControl position="top-right" />}
         

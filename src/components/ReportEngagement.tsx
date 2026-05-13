@@ -76,10 +76,10 @@ export function ReportEngagement({
           size="sm"
           onClick={handleVote}
           disabled={isPendingVote}
-          className={`gap-2 transition-colors ${
+          className={`gap-2 transition-all rounded-full px-4 ${
             hasVoted
               ? "text-primary bg-primary/10 hover:bg-primary/15"
-              : "text-muted-foreground hover:text-primary"
+              : "text-muted-foreground hover:text-primary hover:bg-muted/50"
           }`}
         >
           {isPendingVote ? (
@@ -95,7 +95,7 @@ export function ReportEngagement({
           variant="ghost"
           size="sm"
           onClick={() => setShowCommentBox((prev) => !prev)}
-          className="text-muted-foreground hover:text-primary gap-2"
+          className="text-muted-foreground hover:text-primary hover:bg-muted/50 gap-2 transition-all rounded-full px-4"
         >
           <MessageSquare className="h-4 w-4" />
           <span className="font-semibold">{comments.length}</span>

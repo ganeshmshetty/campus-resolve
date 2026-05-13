@@ -92,7 +92,7 @@ export default async function FeedPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
             <h1 className="text-4xl font-black font-heading tracking-tighter text-foreground">
-              Campus <span className="text-primary">Pulse</span>
+              Campus <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">Pulse</span>
             </h1>
             <p className="text-muted-foreground text-lg">
               See what&apos;s happening around RVCE. Transparency leads to action.
@@ -121,18 +121,18 @@ export default async function FeedPage() {
                   return (
                     <Card
                       key={report.id}
-                      className="overflow-hidden border-border/40 shadow-sm hover:shadow-md transition-all rounded-2xl bg-background"
+                      className="group overflow-hidden border-border/40 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 transition-all duration-300 rounded-2xl bg-background"
                     >
                       <CardHeader className="pb-4">
                         <div className="flex justify-between items-start">
                           <div className="space-y-1">
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-2">
                               <StatusBadge status={report.status} />
-                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+                              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 before:content-[''] before:w-1 before:h-1 before:bg-muted-foreground/40 before:rounded-full">
                                 {report.category}
                               </span>
                             </div>
-                            <CardTitle className="text-2xl font-bold tracking-tight">
+                            <CardTitle className="text-xl font-bold tracking-tight">
                               {report.title}
                             </CardTitle>
                           </div>
@@ -154,7 +154,8 @@ export default async function FeedPage() {
                             <span className="line-clamp-1">{report.address}</span>
                           </div>
                           {report.profiles?.name && (
-                            <div className="text-xs text-muted-foreground">
+                            <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+                              <span className="w-1 h-1 rounded-full bg-border"></span>
                               Reported by{" "}
                               <span className="text-foreground font-semibold">
                                 {report.profiles.name}
