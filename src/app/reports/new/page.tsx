@@ -103,11 +103,12 @@ export default function NewReportPage() {
 
   async function onSubmit(values: z.infer<typeof reportSchema>) {
     let imagePath: string | undefined;
+    let imageUrl: string | undefined;
 
     if (imageFile) {
       setIsUploading(true);
       const fileExt = imageFile.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
       const filePath = `reports/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -120,10 +121,17 @@ export default function NewReportPage() {
         toast.error("Failed to upload image.");
         return;
       }
+
+      // Get the public URL for storage in the DB
+      const { data: urlData } = supabase.storage
+        .from('report-images')
+        .getPublicUrl(filePath);
+
       imagePath = filePath;
+      imageUrl = urlData.publicUrl;
     }
 
-    execute({ ...values, imagePath });
+    execute({ ...values, imagePath, imageUrl });
   }
 
   return (

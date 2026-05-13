@@ -3,16 +3,16 @@ import { formatDistanceToNow } from "date-fns";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MapPin, ArrowRight, MessageSquare, ThumbsUp } from "lucide-react";
+import { MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DashboardNav } from "@/components/layout/nav";
 import { MapWidget } from "@/components/map/MapWidget";
+import { ReportEngagement } from "@/components/ReportEngagement";
 
 function StatusBadge({ status }: { status: string }) {
   const statusStyles: Record<string, string> = {
@@ -36,7 +36,12 @@ function StatusBadge({ status }: { status: string }) {
 export default async function FeedPage() {
   const supabase = await createClient();
 
-  // Fetch all reports for the public feed
+  // Get current user (may be null for public visitors)
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Fetch all reports with author profiles
   const { data: reports, error } = await supabase
     .from("reports")
     .select("*, profiles!reports_created_by_fkey(name)")
@@ -46,121 +51,181 @@ export default async function FeedPage() {
     console.error("Error fetching feed:", error);
   }
 
-  const mappedReports = reports?.filter(r => r.latitude && r.longitude) || [];
+  // Fetch vote counts for all reports
+  const { data: voteCounts } = await supabase
+    .from("report_votes")
+    .select("report_id");
+
+  // Fetch user's own votes (if logged in)
+  const { data: userVotes } = user
+    ? await supabase
+        .from("report_votes")
+        .select("report_id")
+        .eq("user_id", user.id)
+    : { data: [] };
+
+  // Fetch comments for all reports (with author names)
+  const { data: allComments } = await supabase
+    .from("report_comments")
+    .select("id, report_id, content, created_at, profiles(name)")
+    .order("created_at", { ascending: true });
+
+  // Build lookup maps
+  const voteCountMap: Record<string, number> = {};
+  const userVotedSet = new Set((userVotes ?? []).map((v) => v.report_id));
+  for (const v of voteCounts ?? []) {
+    voteCountMap[v.report_id] = (voteCountMap[v.report_id] ?? 0) + 1;
+  }
+
+  const commentsByReport: Record<string, typeof allComments> = {};
+  for (const c of allComments ?? []) {
+    if (!commentsByReport[c.report_id]) commentsByReport[c.report_id] = [];
+    commentsByReport[c.report_id]!.push(c);
+  }
+
+  const mappedReports = reports?.filter((r) => r.latitude && r.longitude) || [];
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-muted/10">
       <DashboardNav />
       <main className="flex-1 w-full max-w-6xl mx-auto p-4 md:p-6 lg:p-8 space-y-8 animate-in slide-in-from-bottom-4 duration-700">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="space-y-2">
+          <div className="space-y-2">
             <h1 className="text-4xl font-black font-heading tracking-tighter text-foreground">
-                Campus <span className="text-primary">Pulse</span>
+              Campus <span className="text-primary">Pulse</span>
             </h1>
             <p className="text-muted-foreground text-lg">
-                See what's happening around RVCE. Transparency leads to action.
+              See what&apos;s happening around RVCE. Transparency leads to action.
             </p>
-            </div>
+          </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-6">
-                <div className="grid gap-6">
-                {!reports || reports.length === 0 ? (
-                    <div className="text-center py-20 bg-background rounded-3xl border border-dashed border-border">
-                        <p className="text-muted-foreground">The campus is quiet today. No issues reported yet.</p>
-                    </div>
-                ) : (
-                    reports.map((report) => (
-                    <Card key={report.id} className="overflow-hidden border-border/40 shadow-sm hover:shadow-md transition-all rounded-2xl bg-background">
-                        <CardHeader className="pb-4">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="grid gap-6">
+              {!reports || reports.length === 0 ? (
+                <div className="text-center py-20 bg-background rounded-3xl border border-dashed border-border">
+                  <p className="text-muted-foreground">
+                    The campus is quiet today. No issues reported yet.
+                  </p>
+                </div>
+              ) : (
+                reports.map((report) => {
+                  const reportComments = (commentsByReport[report.id] ?? []) as unknown as {
+                    id: string;
+                    content: string;
+                    created_at: string;
+                    profiles: { name: string } | null;
+                  }[];
+
+                  return (
+                    <Card
+                      key={report.id}
+                      className="overflow-hidden border-border/40 shadow-sm hover:shadow-md transition-all rounded-2xl bg-background"
+                    >
+                      <CardHeader className="pb-4">
                         <div className="flex justify-between items-start">
-                            <div className="space-y-1">
+                          <div className="space-y-1">
                             <div className="flex items-center gap-2 mb-1">
-                                <StatusBadge status={report.status} />
-                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+                              <StatusBadge status={report.status} />
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
                                 {report.category}
-                                </span>
+                              </span>
                             </div>
                             <CardTitle className="text-2xl font-bold tracking-tight">
-                                {report.title}
+                              {report.title}
                             </CardTitle>
-                            </div>
-                            <span className="text-xs text-muted-foreground font-medium">
-                            {formatDistanceToNow(new Date(report.created_at), { addSuffix: true })}
-                            </span>
+                          </div>
+                          <span className="text-xs text-muted-foreground font-medium shrink-0">
+                            {formatDistanceToNow(new Date(report.created_at), {
+                              addSuffix: true,
+                            })}
+                          </span>
                         </div>
-                        </CardHeader>
-                        <CardContent className="pb-4">
-                        <p className="text-muted-foreground leading-relaxed mb-4">
-                            {report.description}
-                        </p>
-                        <div className="flex items-center gap-4 text-sm font-medium text-foreground/70">
-                            <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
-                                <MapPin className="h-4 w-4 text-primary" />
-                                <span className="line-clamp-1">{report.address}</span>
-                            </div>
-                            {report.profiles?.name && (
-                                <div className="text-xs text-muted-foreground">
-                                    Reported by <span className="text-foreground font-semibold">{report.profiles.name}</span>
-                                </div>
-                            )}
-                        </div>
-                        </CardContent>
-                        <CardFooter className="pt-4 border-t border-border/40 flex justify-between bg-muted/5">
-                        <div className="flex gap-4">
-                                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
-                                    <ThumbsUp className="h-4 w-4 mr-2" />
-                                    Helpful
-                                </Button>
-                                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
-                                    <MessageSquare className="h-4 w-4 mr-2" />
-                                    Comment
-                                </Button>
-                        </div>
-                        <Link href={`/reports/${report.id}`}>
-                                <Button size="sm" variant="secondary" className="font-semibold group">
-                                    Details
-                                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                                </Button>
-                        </Link>
-                        </CardFooter>
-                    </Card>
-                    ))
-                )}
-                </div>
-            </div>
+                      </CardHeader>
 
-            <div className="space-y-6">
-                <MapWidget 
-                    reports={mappedReports} 
-                    title="Geographic Pulse"
-                    description="Issues across RVCE grounds"
-                />
-                
-                <Card className="rounded-2xl border-border/40 shadow-sm bg-background">
-                    <CardHeader className="p-4">
-                        <CardTitle className="text-lg font-bold">Community Guidelines</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0 text-sm text-muted-foreground space-y-4">
-                        <p>Stay respectful and focus on constructive reporting to help improve our campus life.</p>
-                        <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                <span>No duplicate reports</span>
+                      <CardContent className="pb-4">
+                        <p className="text-muted-foreground leading-relaxed mb-4">
+                          {report.description}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-foreground/70">
+                          <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
+                            <MapPin className="h-4 w-4 text-primary" />
+                            <span className="line-clamp-1">{report.address}</span>
+                          </div>
+                          {report.profiles?.name && (
+                            <div className="text-xs text-muted-foreground">
+                              Reported by{" "}
+                              <span className="text-foreground font-semibold">
+                                {report.profiles.name}
+                              </span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                <span>Accurate locations</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                <span>Clear descriptions</span>
-                            </div>
+                          )}
                         </div>
-                    </CardContent>
-                </Card>
+                      </CardContent>
+
+                      <CardFooter className="pt-4 border-t border-border/40 flex flex-col gap-3 bg-muted/5 items-stretch">
+                        <div className="flex justify-between items-center">
+                          <ReportEngagement
+                            reportId={report.id}
+                            initialVoteCount={voteCountMap[report.id] ?? 0}
+                            initialHasVoted={userVotedSet.has(report.id)}
+                            comments={reportComments}
+                          />
+                          <Link href={`/reports/${report.id}`}>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              className="font-semibold group"
+                            >
+                              Details
+                              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                          </Link>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  );
+                })
+              )}
             </div>
+          </div>
+
+          <div className="space-y-6">
+            <MapWidget
+              reports={mappedReports}
+              title="Geographic Pulse"
+              description="Issues across RVCE grounds"
+            />
+
+            <Card className="rounded-2xl border-border/40 shadow-sm bg-background">
+              <CardHeader className="p-4">
+                <CardTitle className="text-lg font-bold">
+                  Community Guidelines
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 text-sm text-muted-foreground space-y-4">
+                <p>
+                  Stay respectful and focus on constructive reporting to help
+                  improve our campus life.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span>No duplicate reports</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span>Accurate locations</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span>Clear descriptions</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </main>
     </div>

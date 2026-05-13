@@ -22,11 +22,12 @@ const reportSchema = z.object({
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   imagePath: z.string().optional(),
+  imageUrl: z.string().optional(),
 });
 
 export const createReportAction = actionClient
   .schema(reportSchema)
-  .action(async ({ parsedInput: { title, description, category, address, latitude, longitude, imagePath } }) => {
+  .action(async ({ parsedInput: { title, description, category, address, latitude, longitude, imagePath, imageUrl } }) => {
     const supabase = await createClient();
 
     const {
@@ -56,12 +57,13 @@ export const createReportAction = actionClient
       return { error: error.message };
     }
 
-    if (imagePath && data) {
+    if (imagePath && imageUrl && data) {
       const { error: imageError } = await supabase.from("report_images").insert({
         report_id: data.id,
         uploaded_by: user.id,
         image_path: imagePath,
-        image_type: "ISSUE",
+        image_url: imageUrl,
+        image_type: "issue",  // lowercase to match DB check constraint
       });
       if (imageError) {
         console.error("Failed to insert image record:", imageError);

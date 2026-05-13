@@ -40,7 +40,7 @@ export function MapWidget({ reports, title = "Campus Watch", description = "Live
           <Maximize2 className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
         </div>
       </CardHeader>
-      <CardContent className="p-0 flex-1 relative min-h-[200px]">
+      <CardContent className="p-0 relative h-[150px]">
         <div className="absolute inset-0 pointer-events-none z-10 bg-gradient-to-t from-background/20 to-transparent" />
         <CampusMap reports={reports} interactive={false} />
         <div className="absolute bottom-3 right-3 z-20">

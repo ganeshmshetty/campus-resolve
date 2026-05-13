@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Map, { Marker, NavigationControl } from "react-map-gl/maplibre";
+import Map, { Marker, NavigationControl, GeolocateControl } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { MapPin } from "lucide-react";
 
@@ -41,6 +41,17 @@ export default function LocationPicker({ onLocationSelect, defaultLocation }: Lo
         cursor="crosshair"
       >
         <NavigationControl position="top-right" />
+        <GeolocateControl
+          position="top-left"
+          trackUserLocation={false}
+          showAccuracyCircle={false}
+          onGeolocate={(e) => {
+            const lat = e.coords.latitude;
+            const lng = e.coords.longitude;
+            setMarker({ latitude: lat, longitude: lng });
+            onLocationSelect(lat, lng);
+          }}
+        />
         
         {marker && (
           <Marker
