@@ -25,7 +25,7 @@ export function MapWidget({ reports, title = "Campus Watch", description = "Live
 
   return (
     <Card 
-      className="overflow-hidden hover:border-primary/50 transition-all shadow-sm cursor-pointer group flex flex-col"
+      className="overflow-hidden hover:border-primary/50 transition-all shadow-sm cursor-pointer group flex flex-col pb-0 gap-0"
       onClick={() => router.push("/map")}
     >
       <CardHeader className="p-4 pb-2">
