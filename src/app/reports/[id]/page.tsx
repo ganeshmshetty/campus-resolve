@@ -12,6 +12,7 @@ import { MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { ReportEngagement } from "@/components/ReportEngagement";
 import ReportMapClient from "@/components/map/ReportMapClient";
+import { auth } from "@/auth";
 
 export default async function ReportDetailsPage({
   params,
@@ -19,12 +20,14 @@ export default async function ReportDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const resolvedParams = await params;
-  const supabase = await createClient();
+  
+  // Use Admin client because RLS relies on auth.uid() which isn't present when bypassing GoTrue with Auth.js
+  const { createAdminClient } = await import("@/utils/supabase/server");
+  const supabase = await createAdminClient();
 
-  // Get current user
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Get current user from Auth.js
+  const session = await auth();
+  const user = session?.user;
 
   // Fetch the report
   const { data: report, error } = await supabase

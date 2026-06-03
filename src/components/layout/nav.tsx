@@ -13,8 +13,6 @@ export function DashboardNav() {
 
   const handleSignOut = async () => {
     await signOutAction();
-    router.push("/");
-    router.refresh();
   };
 
   return (

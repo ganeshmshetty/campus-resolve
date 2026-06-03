@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardNav } from "@/components/layout/nav";
 import { MapWidget } from "@/components/map/MapWidget";
 import { ReportEngagement } from "@/components/ReportEngagement";
+import { auth } from "@/auth";
 
 function StatusBadge({ status }: { status: string }) {
   const statusStyles: Record<string, string> = {
@@ -34,12 +35,13 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default async function FeedPage() {
-  const supabase = await createClient();
+  // Use Admin client because RLS relies on auth.uid() which isn't present when bypassing GoTrue with Auth.js
+  const { createAdminClient } = await import("@/utils/supabase/server");
+  const supabase = await createAdminClient();
 
-  // Get current user (may be null for public visitors)
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Get current user from Auth.js
+  const session = await auth();
+  const user = session?.user;
 
   // Fetch all reports with author profiles
   const { data: reports, error } = await supabase

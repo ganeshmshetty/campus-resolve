@@ -1,9 +1,17 @@
 "use server";
 
-import { createClient, createAdminClient } from "@/utils/supabase/server";
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 import { actionClient } from "@/lib/safe-action";
 import { z } from "zod";
-import { redirect } from "next/navigation";
+import bcrypt from "bcryptjs";
+import { createClient } from "@supabase/supabase-js";
+
+// We use the service role key to insert into Auth.js tables directly
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -13,18 +21,24 @@ const loginSchema = z.object({
 export const loginAction = actionClient
   .schema(loginSchema)
   .action(async ({ parsedInput: { email, password } }) => {
-    const supabase = await createClient();
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      return { error: error.message };
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      return { success: true };
+    } catch (error) {
+      if (error instanceof AuthError) {
+        switch (error.type) {
+          case "CredentialsSignin":
+            return { error: "Invalid credentials." };
+          default:
+            return { error: "Something went wrong." };
+        }
+      }
+      throw error; // Rethrow to Next.js if it's a redirect error
     }
-
-    return { success: true };
   });
 
 const registerSchema = z.object({
@@ -36,39 +50,41 @@ const registerSchema = z.object({
 export const registerAction = actionClient
   .schema(registerSchema)
   .action(async ({ parsedInput: { name, email, password } }) => {
-    const supabase = await createClient();
+    try {
+      // 1. Check if user exists
+      const { data: existingUser } = await supabaseAdmin
+        .from("users")
+        .select("id")
+        .eq("email", email)
+        .maybeSingle();
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
-          role: "user",
-        },
-      },
-    });
+      if (existingUser) {
+        return { error: "User with this email already exists." };
+      }
 
-    if (authError) {
-      return { error: authError.message };
-    }
+      // 2. Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (authData.user) {
-      // Create profile record using admin client to bypass RLS and ensure creation
-      const adminSupabase = await createAdminClient();
-      const { error: profileError } = await adminSupabase.from("profiles").insert({
-        id: authData.user.id,
-        name,
+      // 3. Insert into public.users (Auth.js table)
+      const { error: insertError } = await supabaseAdmin.from("users").insert({
         email,
+        name,
+        password: hashedPassword,
         role: "user",
       });
 
-      if (profileError) {
-        console.error("Profile creation error:", profileError);
-        // We don't return error here because the user is already created in Auth
-        // and might just need a profile fixup later, or we could handle it differently.
+      if (insertError) {
+        console.error("Register Error:", insertError);
+        return { error: "Failed to create account." };
       }
-    }
 
-    return { success: true };
+      return { success: true };
+    } catch (error) {
+      console.error(error);
+      return { error: "Something went wrong." };
+    }
   });
+
+export async function loginWithGoogle() {
+  await signIn("google", { redirectTo: "/dashboard" });
+}

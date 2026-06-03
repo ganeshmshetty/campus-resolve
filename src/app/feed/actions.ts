@@ -1,20 +1,21 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 export async function toggleVoteAction(reportId: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user) {
+  if (!user || !user.id) {
     return { error: "You must be logged in to vote." };
   }
 
+  const { createAdminClient } = await import("@/utils/supabase/server");
+  const supabaseAdmin = await createAdminClient();
+
   // Check if vote already exists
-  const { data: existing } = await supabase
+  const { data: existing } = await supabaseAdmin
     .from("report_votes")
     .select("id")
     .eq("report_id", reportId)
@@ -23,10 +24,10 @@ export async function toggleVoteAction(reportId: string) {
 
   if (existing) {
     // Remove vote
-    await supabase.from("report_votes").delete().eq("id", existing.id);
+    await supabaseAdmin.from("report_votes").delete().eq("id", existing.id);
   } else {
     // Add vote
-    await supabase.from("report_votes").insert({
+    await supabaseAdmin.from("report_votes").insert({
       report_id: reportId,
       user_id: user.id,
     });
@@ -38,12 +39,10 @@ export async function toggleVoteAction(reportId: string) {
 }
 
 export async function addCommentAction(reportId: string, content: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user) {
+  if (!user || !user.id) {
     return { error: "You must be logged in to comment." };
   }
 
@@ -51,7 +50,10 @@ export async function addCommentAction(reportId: string, content: string) {
     return { error: "Comment must be at least 3 characters." };
   }
 
-  const { error } = await supabase.from("report_comments").insert({
+  const { createAdminClient } = await import("@/utils/supabase/server");
+  const supabaseAdmin = await createAdminClient();
+
+  const { error } = await supabaseAdmin.from("report_comments").insert({
     report_id: reportId,
     user_id: user.id,
     content: content.trim(),

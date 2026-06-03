@@ -11,6 +11,7 @@ import { MapPin, FileWarning, PlusCircle, Users, ShieldCheck, Activity } from "l
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MapWidget } from "@/components/map/MapWidget";
+import { auth } from "@/auth";
 
 function StatusBadge({ status }: { status: string }) {
   const statusStyles: Record<string, string> = {
@@ -32,13 +33,16 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
+  const session = await auth();
+  const user = session?.user;
 
-  const { data: { user } } = await supabase.auth.getUser();
+  // We use the service role key to bypass RLS since Auth.js isn't issuing Supabase tokens automatically in this setup
+  const { createAdminClient } = await import("@/utils/supabase/server");
+  const supabase = await createAdminClient();
 
-  // Fetch role from profiles
+  // Fetch role from users table (Auth.js table) or profiles
   const { data: profile } = await supabase
-    .from("profiles")
+    .from("users")
     .select("role, name")
     .eq("id", user?.id)
     .single();
