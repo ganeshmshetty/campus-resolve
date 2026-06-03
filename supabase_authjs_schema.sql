@@ -1,9 +1,15 @@
 -- ============================================================
 -- Auth.js (NextAuth) Schema for Supabase
 -- Run this in your Supabase SQL Editor to support Auth.js
+-- The @auth/supabase-adapter REQUIRES these to be in the `next_auth` schema.
 -- ============================================================
 
-CREATE TABLE IF NOT EXISTS public.users (
+CREATE SCHEMA IF NOT EXISTS next_auth;
+
+GRANT USAGE ON SCHEMA next_auth TO service_role;
+GRANT ALL ON SCHEMA next_auth TO service_role;
+
+CREATE TABLE IF NOT EXISTS next_auth.users (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   name text,
   email text,
@@ -15,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   CONSTRAINT email_unique UNIQUE (email)
 );
 
-CREATE TABLE IF NOT EXISTS public.accounts (
+CREATE TABLE IF NOT EXISTS next_auth.accounts (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   "userId" uuid NOT NULL,
   type text NOT NULL,
@@ -32,20 +38,20 @@ CREATE TABLE IF NOT EXISTS public.accounts (
   oauth_token text,
   CONSTRAINT accounts_pkey PRIMARY KEY (id),
   CONSTRAINT accounts_provider_providerAccountId_key UNIQUE (provider, "providerAccountId"),
-  CONSTRAINT accounts_userId_fkey FOREIGN KEY ("userId") REFERENCES public.users(id) ON DELETE CASCADE
+  CONSTRAINT accounts_userId_fkey FOREIGN KEY ("userId") REFERENCES next_auth.users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS public.sessions (
+CREATE TABLE IF NOT EXISTS next_auth.sessions (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   expires timestamp with time zone NOT NULL,
   "sessionToken" text NOT NULL,
   "userId" uuid NOT NULL,
   CONSTRAINT sessions_pkey PRIMARY KEY (id),
   CONSTRAINT sessionToken_unique UNIQUE ("sessionToken"),
-  CONSTRAINT sessions_userId_fkey FOREIGN KEY ("userId") REFERENCES public.users(id) ON DELETE CASCADE
+  CONSTRAINT sessions_userId_fkey FOREIGN KEY ("userId") REFERENCES next_auth.users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS public.verification_tokens (
+CREATE TABLE IF NOT EXISTS next_auth.verification_tokens (
   identifier text NOT NULL,
   token text NOT NULL,
   expires timestamp with time zone NOT NULL,
@@ -53,5 +59,8 @@ CREATE TABLE IF NOT EXISTS public.verification_tokens (
   CONSTRAINT token_identifier_unique UNIQUE (token, identifier)
 );
 
--- Enable RLS (Optional but recommended, though Auth.js uses server-side service role usually)
--- For now, we will allow service role access.
+-- Grant privileges to the service_role so the adapter can manage these tables
+GRANT ALL ON TABLE next_auth.users TO service_role;
+GRANT ALL ON TABLE next_auth.accounts TO service_role;
+GRANT ALL ON TABLE next_auth.sessions TO service_role;
+GRANT ALL ON TABLE next_auth.verification_tokens TO service_role;

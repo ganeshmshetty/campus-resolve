@@ -40,8 +40,16 @@ export default async function DashboardPage() {
   const { createAdminClient } = await import("@/utils/supabase/server");
   const supabase = await createAdminClient();
 
-  // Fetch role from users table (Auth.js table) or profiles
-  const { data: profile } = await supabase
+  // Create a separate client pointing to the next_auth schema to get the user's role
+  const { createClient: createBaseClient } = await import("@supabase/supabase-js");
+  const supabaseNextAuth = createBaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { db: { schema: "next_auth" } }
+  );
+
+  // Fetch role from users table (Auth.js table)
+  const { data: profile } = await supabaseNextAuth
     .from("users")
     .select("role, name")
     .eq("id", user?.id)

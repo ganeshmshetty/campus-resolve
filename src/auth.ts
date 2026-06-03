@@ -67,7 +67,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (oldAuthData?.user && !error) {
           // Old login successful! Let's migrate them to the new system.
           // Get their old profile data
-          const { data: oldProfile } = await supabase
+          const { data: oldProfile } = await supabasePublic
             .from("profiles")
             .select("*")
             .eq("id", oldAuthData.user.id)
@@ -122,6 +122,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       // Pass token data to the session object
       if (token && session.user) {
+        session.user.id = token.id as string;
+        (session.user as any).role = token.role as string;
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/login", // Custom login page
+  },
+});
+er) {
         session.user.id = token.id as string;
         (session.user as any).role = token.role as string;
       }

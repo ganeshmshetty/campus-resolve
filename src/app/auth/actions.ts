@@ -10,7 +10,8 @@ import { createClient } from "@supabase/supabase-js";
 // We use the service role key to insert into Auth.js tables directly
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  { db: { schema: "next_auth" } }
 );
 
 const loginSchema = z.object({
