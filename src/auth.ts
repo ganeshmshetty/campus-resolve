@@ -8,6 +8,13 @@ import { createClient } from "@supabase/supabase-js";
 // We use the service role key to bypass RLS for Auth.js operations
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  { db: { schema: "next_auth" } }
+);
+
+// We need a separate client for public schema (e.g., profiles)
+const supabasePublic = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
@@ -122,17 +129,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       // Pass token data to the session object
       if (token && session.user) {
-        session.user.id = token.id as string;
-        (session.user as any).role = token.role as string;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/login", // Custom login page
-  },
-});
-er) {
         session.user.id = token.id as string;
         (session.user as any).role = token.role as string;
       }
