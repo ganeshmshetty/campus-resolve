@@ -109,6 +109,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt", // Use JWTs for sessions to keep edge compatibility
   },
+  trustHost: true,
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       // Initially, when user logs in, append data to token
