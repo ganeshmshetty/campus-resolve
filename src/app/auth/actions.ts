@@ -66,17 +66,41 @@ export const registerAction = actionClient
       // 2. Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // 3. Insert into public.users (Auth.js table)
-      const { error: insertError } = await supabaseAdmin.from("users").insert({
-        email,
-        name,
-        password: hashedPassword,
-        role: "user",
-      });
+      // 3. Insert into next_auth.users (Auth.js table)
+      const { data: newUser, error: insertError } = await supabaseAdmin
+        .from("users")
+        .insert({
+          email,
+          name,
+          password: hashedPassword,
+          role: "user",
+        })
+        .select("id")
+        .single();
 
-      if (insertError) {
+      if (insertError || !newUser) {
         console.error("Register Error:", insertError);
         return { error: "Failed to create account." };
+      }
+
+      // 4. Insert into public.profiles for application logic/foreign keys
+      const supabasePublic = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+      
+      const { error: profileError } = await supabasePublic
+        .from("profiles")
+        .insert({
+          id: newUser.id,
+          name,
+          email,
+          role: "user",
+        });
+        
+      if (profileError) {
+        console.error("Profile Creation Error:", profileError);
+        // We still return success as they can log in, but logs will show the missing profile error
       }
 
       return { success: true };

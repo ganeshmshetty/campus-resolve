@@ -118,6 +118,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   trustHost: true,
   debug: true,
+  events: {
+    async createUser({ user }) {
+      // Sync newly created user (e.g. from Google Provider) to public.profiles
+      const { error } = await supabasePublic.from("profiles").insert({
+        id: user.id,
+        name: user.name || user.email?.split("@")[0] || "User",
+        email: user.email,
+        role: "user"
+      });
+      if (error) {
+        console.error("Failed to sync new user to profiles table:", error);
+      }
+    }
+  },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       // Initially, when user logs in, append data to token
