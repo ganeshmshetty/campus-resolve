@@ -16,9 +16,6 @@ export default function Home() {
           <Link className="text-sm font-medium hover:text-primary transition-colors text-muted-foreground hidden sm:block" href="#features">
             Features
           </Link>
-          <Link className="text-sm font-medium hover:text-primary transition-colors text-muted-foreground hidden sm:block" href="#how-it-works">
-            How it Works
-          </Link>
           <div className="flex items-center gap-2 ml-2">
             <Link href="/login">
               <Button variant="ghost" className="font-medium">Sign In</Button>
