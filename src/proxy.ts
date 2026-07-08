@@ -5,6 +5,16 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const { pathname } = req.nextUrl;
 
+  // Redirect logged-in users away from auth pages
+  if (
+    isLoggedIn &&
+    (pathname.startsWith("/login") || pathname.startsWith("/register"))
+  ) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
   // Protect all routes except auth/public routes
   if (
     !isLoggedIn &&

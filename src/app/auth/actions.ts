@@ -52,14 +52,25 @@ export const registerAction = actionClient
   .schema(registerSchema)
   .action(async ({ parsedInput: { name, email, password } }) => {
     try {
-      // 1. Check if user exists
+      // 1. Check if user exists in next_auth.users or public.profiles (legacy)
       const { data: existingUser } = await supabaseAdmin
         .from("users")
         .select("id")
         .eq("email", email)
         .maybeSingle();
 
-      if (existingUser) {
+      const supabasePublic = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      const { data: existingProfile } = await supabasePublic
+        .from("profiles")
+        .select("id")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (existingUser || existingProfile) {
         return { error: "User with this email already exists." };
       }
 
@@ -84,10 +95,6 @@ export const registerAction = actionClient
       }
 
       // 4. Insert into public.profiles for application logic/foreign keys
-      const supabasePublic = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
       
       const { error: profileError } = await supabasePublic
         .from("profiles")
