@@ -19,6 +19,7 @@ interface ReportEngagementProps {
   initialHasVoted: boolean;
   comments: Comment[];
   showComments?: boolean;
+  children?: React.ReactNode;
 }
 
 export function ReportEngagement({
@@ -27,6 +28,7 @@ export function ReportEngagement({
   initialHasVoted,
   comments: initialComments,
   showComments = false,
+  children,
 }: ReportEngagementProps) {
   const [voteCount, setVoteCount] = useState(initialVoteCount);
   const [hasVoted, setHasVoted] = useState(initialHasVoted);
@@ -68,39 +70,42 @@ export function ReportEngagement({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 w-full">
       {/* Action bar */}
-      <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleVote}
-          disabled={isPendingVote}
-          className={`gap-2 transition-all rounded-full px-4 ${
-            hasVoted
-              ? "text-primary bg-primary/10 hover:bg-primary/15"
-              : "text-muted-foreground hover:text-primary hover:bg-muted/50"
-          }`}
-        >
-          {isPendingVote ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <ThumbsUp className={`h-4 w-4 ${hasVoted ? "fill-primary" : ""}`} />
-          )}
-          <span className="font-semibold">{voteCount}</span>
-          Helpful
-        </Button>
+      <div className="flex items-center justify-between gap-2 w-full">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleVote}
+            disabled={isPendingVote}
+            className={`gap-2 transition-all rounded-full px-4 ${
+              hasVoted
+                ? "text-primary bg-primary/10 hover:bg-primary/15"
+                : "text-muted-foreground hover:text-primary hover:bg-muted/50"
+            }`}
+          >
+            {isPendingVote ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ThumbsUp className={`h-4 w-4 ${hasVoted ? "fill-primary" : ""}`} />
+            )}
+            <span className="font-semibold">{voteCount}</span>
+            Helpful
+          </Button>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowCommentBox((prev) => !prev)}
-          className="text-muted-foreground hover:text-primary hover:bg-muted/50 gap-2 transition-all rounded-full px-4"
-        >
-          <MessageSquare className="h-4 w-4" />
-          <span className="font-semibold">{comments.length}</span>
-          {showCommentBox ? "Hide" : "Comments"}
-        </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowCommentBox((prev) => !prev)}
+            className="text-muted-foreground hover:text-primary hover:bg-muted/50 gap-2 transition-all rounded-full px-4"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span className="font-semibold">{comments.length}</span>
+            {showCommentBox ? "Hide" : "Comments"}
+          </Button>
+        </div>
+        {children && <div className="shrink-0">{children}</div>}
       </div>
 
       {/* Comments section */}

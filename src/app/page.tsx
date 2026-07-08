@@ -45,7 +45,7 @@ export default function Home() {
                   <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
                   Official Civic Reporting Portal
                 </div>
-                <h1 className="text-4xl font-heading font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none text-foreground mt-8">
+                <h1 className="text-4xl font-heading font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none text-foreground mt-4">
                   Report issues. Spark <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">change.</span>
                 </h1>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
