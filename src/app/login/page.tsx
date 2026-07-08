@@ -65,12 +65,11 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-muted/40 p-4">
+    <div className="flex min-h-[100dvh] items-start justify-center bg-muted/40 p-4 pt-16 md:pt-28">
       <div className="w-full max-w-md space-y-8">
         <div className="flex flex-col items-center space-y-2 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-            <MapPin className="h-6 w-6 text-primary" />
-          </div>
+          <img src="/rvce-logo.png" alt="RVCE Logo" className="h-24 w-auto object-contain drop-shadow-sm mb-2" />
+          <span className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase">R.V. College of Engineering</span>
           <h1 className="text-3xl font-bold font-heading text-foreground tracking-tight">
             CampusResolve
           </h1>

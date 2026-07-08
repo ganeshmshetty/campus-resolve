@@ -30,7 +30,7 @@ export default function Home() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-grid-black/[0.02] relative overflow-hidden">
+        <section className="w-full pt-16 pb-12 md:pt-24 md:pb-24 lg:pt-32 lg:pb-32 xl:pt-36 xl:pb-48 bg-grid-black/[0.02] relative overflow-hidden">
           {/* Decorative background blobs */}
           <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
           <div className="absolute top-0 -right-4 w-72 h-72 bg-accent/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
@@ -38,12 +38,17 @@ export default function Home() {
 
           <div className="container px-4 md:px-6 relative z-10 mx-auto">
             <div className="flex flex-col items-center space-y-8 text-center">
-              <div className="space-y-4 max-w-3xl">
-                <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-4">
-                  <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-                  Your Campus, Better Together
+              <div className="flex flex-col items-center space-y-4 max-w-3xl">
+                {/* Prominent RVCE Branding */}
+                <div className="flex flex-col items-center gap-2 mb-2">
+                  <img src="/rvce-logo.png" alt="RVCE Logo" className="h-28 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform duration-300" />
+                  <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase">R.V. College of Engineering</span>
                 </div>
-                <h1 className="text-4xl font-heading font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none text-foreground">
+                <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary">
+                  <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+                  Official Civic Reporting Portal
+                </div>
+                <h1 className="text-4xl font-heading font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none text-foreground mt-8">
                   Report issues. Spark <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">change.</span>
                 </h1>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -106,10 +111,13 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-border/40 bg-background">
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} CampusResolve. All rights reserved.
-        </p>
+      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-border/40 bg-background justify-between">
+        <div className="flex items-center gap-2">
+          <img src="/rvce-logo.png" alt="RVCE Logo" className="h-6 w-auto opacity-70" />
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} CampusResolve (RVCE). All rights reserved.
+          </p>
+        </div>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs text-muted-foreground hover:text-foreground transition-colors hover:underline underline-offset-4" href="#">
             Terms of Service
