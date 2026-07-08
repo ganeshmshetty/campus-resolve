@@ -208,11 +208,13 @@ export default async function FeedPage() {
           </div>
 
           <div className="space-y-6">
-            <MapWidget
-              reports={mappedReports}
-              title="Geographic Pulse"
-              description="Issues across RVCE grounds"
-            />
+            <div className="hidden lg:block">
+              <MapWidget
+                reports={mappedReports}
+                title="Geographic Pulse"
+                description="Issues across RVCE grounds"
+              />
+            </div>
 
             <Card className="rounded-2xl border-border/40 shadow-sm bg-background">
               <CardHeader className="p-4">
